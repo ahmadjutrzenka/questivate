@@ -80,6 +80,56 @@ class AuthController {
       next(error);
     }
   }
+  static async getMyProfile(req, res, next) {
+    try {
+      const user = await User.findByPk(req.user.id, {
+        attributes: { exclude: ["password", "googleId"] },
+        include: [
+          {
+            model: require("../models").TasteDNA,
+            as: "TasteDNA",
+            attributes: ["content", "generatedAt"],
+          },
+        ],
+      });
+
+      if (!user) {
+        throw { name: "NotFound", message: "User not found" };
+      }
+      res.status(200).json({ user });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async updatedMyProfile(req, res, next) {
+    try {
+      const { bio } = req.body;
+
+      const user = await User.findByPk(req.user.id);
+      if (!user) {
+        throw { name: "NotFound", message: "User not found" };
+      }
+
+      await user.update({ bio });
+      res.status(200).json({
+        message: "Profile updated successfully",
+        bio: user.bio,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async updateMyAvatar(req, res, next) {
+    try {
+      res.status(501).json({
+        message: "Avatar upload not yet implemented",
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 module.exports = AuthController;
