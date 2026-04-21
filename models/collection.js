@@ -3,10 +3,10 @@ const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Collection extends Model {
     static associate(models) {
-      Collection.belongsTo(User, {
+      Collection.belongsTo(models.User, {
         foreignKey: "userId",
       });
-      Collection.hasOne(Review, {
+      Collection.hasOne(models.Review, {
         foreignKey: "collectionId",
       });
     }
@@ -21,19 +21,49 @@ module.exports = (sequelize, DataTypes) => {
           key: "id",
         },
         onDelete: "CASCADE",
+        validate: {
+          notNull: {
+            msg: "User ID is required",
+          },
+        },
       },
       mediaType: {
         type: DataTypes.ENUM,
         allowNull: false,
         values: ["anime", "manga", "game"],
+        validate: {
+          notNull: {
+            msg: "Media type is required",
+          },
+          isIn: {
+            args: [["anime", "manga", "game"]],
+            msg: "Media type must be one of: anime, manga, game",
+          },
+        },
       },
       externalId: {
         type: DataTypes.STRING,
         allowNull: false,
+        validate: {
+          notNull: {
+            msg: "External ID is required",
+          },
+          notEmpty: {
+            msg: "External ID cannot be empty",
+          },
+        },
       },
       title: {
         type: DataTypes.STRING,
         allowNull: false,
+        validate: {
+          notNull: {
+            msg: "Title is required",
+          },
+          notEmpty: {
+            msg: "Title cannot be empty",
+          },
+        },
       },
       coverUrl: {
         type: DataTypes.STRING,
@@ -55,6 +85,15 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.ENUM,
         values: ["plan", "ongoing", "completed", "dropped"],
         allowNull: false,
+        validate: {
+          notNull: {
+            msg: "Status is required",
+          },
+          isIn: {
+            args: [["plan", "ongoing", "completed", "dropped"]],
+            msg: "Status must be one of: plan, ongoing, completed, dropped",
+          },
+        },
       },
       isFavorite: {
         type: DataTypes.BOOLEAN,
