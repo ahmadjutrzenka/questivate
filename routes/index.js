@@ -6,14 +6,12 @@ const usersRouter = require("./users");
 const collectionsRouter = require("./collections");
 const reviewsRouter = require("./reviews");
 const searchRouter = require("./search");
-const mediaRouter = require("./media");
 const aiRouter = require("./ai");
 
 // Public routes
-router.use(authRouter);
+router.use("/auth", authRouter);
 router.use("/users", usersRouter);
 router.use("/reviews", reviewsRouter);
-router.use("/media", mediaRouter);
 
 // Protected routes
 router.use(authentication);
