@@ -1,12 +1,16 @@
-const express = require("express");
-const router = express.Router();
+const router = require("express").Router();
 
 const AuthController = require("../controllers/AuthController");
+const authentication = require("../middlewares/authentication");
 
-// Public routes
 router.post("/register", AuthController.register);
 router.post("/login", AuthController.login);
-router.get("/google", AuthController.googleOAuth);
-router.get("/google/callback", AuthController.googleOAuthCallback);
+router.get("/", AuthController.googleOAuth);
+router.get("/callback", AuthController.googleOAuthCallback);
+
+router.use(authentication);
+router.get("/profile", AuthController.getMyProfile);
+router.patch("/profile", AuthController.updateMyProfile);
+router.patch("/profile/avatar", AuthController.updateMyAvatar);
 
 module.exports = router;
