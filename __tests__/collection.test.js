@@ -51,6 +51,20 @@ describe("POST /collections", () => {
     collectionId = res.body.collection.id;
   });
 
+  it("400 — title yang sama tidak bisa ditambahkan dua kali untuk user yang sama", async () => {
+    const res = await request(app)
+      .post("/collections")
+      .set("Authorization", `Bearer ${tokenA}`)
+      .send({
+        mediaType: "anime",
+        externalId: "1535",
+        title: "Death Note",
+        status: "completed",
+      });
+    expect(res.status).toBe(400);
+    expect(res.body.message).toMatch(/already in your collection/i);
+  });
+
   it("400 — mediaType tidak valid", async () => {
     const res = await request(app)
       .post("/collections")

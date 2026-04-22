@@ -40,6 +40,13 @@ class CollectionController {
         status,
       } = req.body;
 
+      if (!mediaType || !["anime", "manga", "game"].includes(mediaType)) {
+        throw {
+          name: "BadRequest",
+          message: "Type must be anime, manga, or game",
+        };
+      }
+
       const existing = await Collection.findOne({
         where: {
           userId: req.user.id,
