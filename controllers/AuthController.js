@@ -1,5 +1,5 @@
 const { User, TasteDNA } = require("../models");
-const { hashPassword, comparePassword } = require("../helpers/bcrypt");
+const { comparePassword } = require("../helpers/bcrypt");
 const { signToken } = require("../helpers/jwt");
 const { OAuth2Client } = require("google-auth-library");
 const cloudinary = require("cloudinary").v2;

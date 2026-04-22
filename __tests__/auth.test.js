@@ -3,6 +3,7 @@ const app = require("../app");
 const { sequelize, User } = require("../models");
 const { signToken } = require("../helpers/jwt");
 const { OAuth2Client } = require("google-auth-library");
+const cloudinary = require("cloudinary").v2;
 
 jest.mock("google-auth-library", () => {
   return {
@@ -248,6 +249,22 @@ describe("PATCH /auth/profile", () => {
     const res = await request(app)
       .patch("/auth/profile/avatar")
       .set("Authorization", `Bearer ${token}`);
-    expect(res.status).toBe(501);
+    expect(res.status).toBe(400);
+    expect(res.body.message).toMatch(/avatar image is required/i);
+  });
+
+  it("200 — update avatar berhasil", async () => {
+    jest.spyOn(cloudinary.uploader, "upload").mockResolvedValueOnce({
+      secure_url: "https://res.cloudinary.com/demo/image/upload/v1/avatar.png",
+    });
+
+    const res = await request(app)
+      .patch("/auth/profile/avatar")
+      .set("Authorization", `Bearer ${token}`)
+      .attach("avatar", Buffer.from("fake-image"), "avatar.png");
+
+    expect(res.status).toBe(200);
+    expect(res.body.message).toMatch(/avatar updated successfully/i);
+    expect(res.body.avatar).toMatch(/^https:\/\//);
   });
 });
