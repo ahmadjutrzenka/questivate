@@ -2,6 +2,13 @@ const { User, TasteDNA } = require("../models");
 const { hashPassword, comparePassword } = require("../helpers/bcrypt");
 const { signToken } = require("../helpers/jwt");
 const { OAuth2Client } = require("google-auth-library");
+const cloudinary = require("cloudinary").v2;
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 class AuthController {
   static async register(req, res, next) {
@@ -168,8 +175,25 @@ class AuthController {
 
   static async updateMyAvatar(req, res, next) {
     try {
-      res.status(501).json({
-        message: "Avatar upload not yet implemented",
+      if (!req.file) {
+        throw { name: "BadRequest", message: "Avatar image is required" };
+      }
+
+      const base64Image = req.file.buffer.toString("base64");
+      const base64DataUrl = `data:${req.file.mimetype};base64,${base64Image}`;
+
+      const result = await cloudinary.uploader.upload(base64DataUrl, {
+        folder: "questivate/avatars",
+        public_id: `user_${req.user.id}`,
+        overwrite: true,
+      });
+
+      const user = await User.findByPk(req.user.id);
+      await user.update({ avatar: result.secure_url });
+
+      res.status(200).json({
+        message: "Avatar updated successfully",
+        avatar: result.secure_url,
       });
     } catch (error) {
       next(error);
