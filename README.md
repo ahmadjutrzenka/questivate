@@ -17,8 +17,8 @@ A cross-media logging and AI recommendation server for anime, manga, and games. 
 - **Authentication:** JWT + bcryptjs (manual) · Google OAuth via `google-auth-library`
 - **AI:** Google Gemini (`@google/genai`)
 - **External APIs:** Jikan v4 (anime & manga) · IGDB via Twitch (games)
-- **Image Storage:** AWS S3 (avatar upload)
-- **Testing:** Jest + Supertest — **96.46% line coverage**
+- **Image Storage:** Cloudinary (avatar upload)
+- **Testing:** Jest + Supertest — **~97% line coverage**
 
 ---
 
@@ -63,10 +63,9 @@ IGDB_CLIENT_SECRET=
 
 GEMINI_API_KEY=
 
-AWS_ACCESS_KEY_ID=
-AWS_SECRET_ACCESS_KEY=
-AWS_REGION=
-AWS_S3_BUCKET_NAME=
+CLOUDINARY_CLOUD_NAME=
+CLOUDINARY_API_KEY=
+CLOUDINARY_API_SECRET=
 
 CLIENT_URL=http://localhost:5173
 ```
@@ -186,7 +185,7 @@ Get the authenticated user's own profile including Taste DNA.
     "username": "ahmadjutrzenka",
     "email": "ahmad@mail.com",
     "loginMethod": "local",
-    "avatar": "https://s3.url/avatar.jpg",
+    "avatar": "https://res.cloudinary.com/your_cloud/image/upload/questivate/avatars/user_1.jpg",
     "bio": "I love dark fantasy",
     "TasteDNA": {
       "content": "Your taste gravitates toward...",
@@ -218,14 +217,17 @@ Update bio.
 
 #### `PATCH /auth/profile/avatar` 🔒
 
-Upload profile avatar to AWS S3.
+Upload profile avatar to Cloudinary.
 
 **Request:** `Content-Type: multipart/form-data`, field name: `avatar`
 
 **Response `200`:**
 
 ```json
-{ "avatar": "https://s3.amazonaws.com/vibesync-avatars/..." }
+{
+  "message": "Avatar updated successfully",
+  "avatar": "https://res.cloudinary.com/your_cloud/image/upload/questivate/avatars/user_1.jpg"
+}
 ```
 
 ---
