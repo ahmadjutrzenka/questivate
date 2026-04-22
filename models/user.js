@@ -56,11 +56,6 @@ module.exports = (sequelize, DataTypes) => {
           },
         },
       },
-      googleId: {
-        type: DataTypes.STRING,
-        allowNull: true,
-        unique: true,
-      },
       loginMethod: {
         type: DataTypes.ENUM("local", "google"),
         allowNull: false,

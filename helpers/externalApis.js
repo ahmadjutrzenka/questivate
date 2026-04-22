@@ -1,6 +1,4 @@
 const axios = require("axios");
-const { raw } = require("express");
-const { search } = require("../routes");
 
 let _igdbToken = null;
 let _tokenExpiry = 0;
@@ -22,14 +20,14 @@ async function getIGDBToken() {
 
 async function searchJikanAnime(query) {
   const response = await axios.get("https://api.jikan.moe/v4/anime", {
-    params: { query, limit: 8 },
+    params: { q: query, limit: 8 },
   });
   return response.data.data || [];
 }
 
 async function searchJikanManga(query) {
   const response = await axios.get("https://api.jikan.moe/v4/manga", {
-    params: { query, limit: 8 },
+    params: { q: query, limit: 8 },
   });
   return response.data.data || [];
 }
@@ -38,7 +36,7 @@ async function searchIGDB(query) {
   const token = await getIGDBToken();
   const response = await axios.post(
     "https://api.igdb.com/v4/games",
-    `fields name,cover,url,genres.name,summary,rating,first_release_date; search "${query}"; limit 8;`,
+    `fields name,cover.url,genres.name,summary,rating,first_release_date; search "${query}"; limit 8;`,
     {
       headers: {
         "Client-ID": process.env.IGDB_CLIENT_ID,
@@ -59,7 +57,7 @@ async function getDetailIGDB(id) {
   const token = await getIGDBToken();
   const response = await axios.post(
     "https://api.igdb.com/v4/games",
-    `fields name,cover,url,genres.name,summary,rating,first_release_date,involved_companies.company.name; where id = ${id};`,
+    `fields name,cover.url,genres.name,summary,rating,first_release_date,involved_companies.company.name; where id = ${id};`,
     {
       headers: {
         "Client-ID": process.env.IGDB_CLIENT_ID,

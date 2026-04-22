@@ -5,8 +5,8 @@ const authentication = require("../middlewares/authentication");
 
 router.post("/register", AuthController.register);
 router.post("/login", AuthController.login);
-router.get("/", AuthController.googleOAuth);
-router.get("/callback", AuthController.googleOAuthCallback);
+router.post("/google-login", AuthController.googleLogin);
+
 
 router.use(authentication);
 router.get("/profile", AuthController.getMyProfile);

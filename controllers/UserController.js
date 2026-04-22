@@ -4,11 +4,11 @@ const { Op } = require("sequelize");
 class UserController {
   static async getUsers(req, res, next) {
     try {
-      const { query } = req.query;
+      const keyword = req.query.q ?? req.query.query;
       const where = {};
-      if (query) {
+      if (keyword) {
         where.username = {
-          [Op.iLike]: `%${query}%`,
+          [Op.iLike]: `%${keyword}%`,
         };
       }
       const users = await User.findAll({
@@ -49,7 +49,14 @@ class UserController {
 
       const favorites = await Collection.findAll({
         where: { userId: user.id, isFavorite: true },
-        attributes: ["id", "title", "coverUrl", "mediaType", "externalId"],
+        attributes: [
+          "id",
+          "title",
+          "coverUrl",
+          "mediaType",
+          "externalId",
+          "isFavorite",
+        ],
         limit: 5,
       });
 

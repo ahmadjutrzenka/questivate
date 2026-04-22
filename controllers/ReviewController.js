@@ -22,7 +22,7 @@ class ReviewController {
         const data = review.toJSON();
         data.isEdited =
           new Date(data.updatedAt).getTime() >
-          new Date(data.createdAt).getTime() + 60000;
+          new Date(data.createdAt).getTime();
         return data;
       });
 
@@ -55,8 +55,7 @@ class ReviewController {
 
       const data = review.toJSON();
       data.isEdited =
-        new Date(data.updatedAt).getTime() >
-        new Date(data.createdAt).getTime() + 60000;
+        new Date(data.updatedAt).getTime() > new Date(data.createdAt).getTime();
 
       res.status(200).json(data);
     } catch (error) {
@@ -69,7 +68,7 @@ class ReviewController {
       const { collectionId, rating, content } = req.body;
       const userId = req.user.id;
 
-      if (!collectionId || !rating) {
+      if (!rating && !content) {
         throw {
           name: "BadRequest",
           message: "Rating or review content is required",
@@ -114,8 +113,7 @@ class ReviewController {
 
       const data = review.toJSON();
       data.isEdited =
-        new Date(data.updatedAt).getTime() >
-        new Date(data.createdAt).getTime() + 60000;
+        new Date(data.updatedAt).getTime() > new Date(data.createdAt).getTime();
 
       res.status(200).json(data);
     } catch (error) {

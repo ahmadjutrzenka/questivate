@@ -23,11 +23,6 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: true,
       },
-      googleId: {
-        type: Sequelize.STRING,
-        allowNull: true,
-        unique: true,
-      },
       loginMethod: {
         type: Sequelize.ENUM("local", "google"),
         allowNull: false,

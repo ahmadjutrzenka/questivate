@@ -12,7 +12,6 @@ module.exports = {
           username: "haseulbintaro",
           email: "haseul@mail.com",
           password: hashPassword("haseul123"),
-          googleId: null,
           loginMethod: "local",
           avatar:
             "https://pbs.twimg.com/media/G_Sez5ZW4AATq7z?format=jpg&name=large",
@@ -24,7 +23,6 @@ module.exports = {
           username: "sohyunslipi",
           email: "sohyun@mail.com",
           password: hashPassword("sohyun123"),
-          googleId: null,
           loginMethod: "local",
           avatar:
             "https://pbs.twimg.com/media/HGR-_iFbkAAMDOP?format=jpg&name=large",

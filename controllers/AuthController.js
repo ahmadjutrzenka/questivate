@@ -1,6 +1,7 @@
 const { User, TasteDNA } = require("../models");
 const { hashPassword, comparePassword } = require("../helpers/bcrypt");
 const { signToken } = require("../helpers/jwt");
+const { OAuth2Client } = require("google-auth-library");
 
 class AuthController {
   static async register(req, res, next) {
@@ -34,6 +35,7 @@ class AuthController {
       next(error);
     }
   }
+
   static async login(req, res, next) {
     try {
       const { email, password } = req.body;
@@ -80,10 +82,53 @@ class AuthController {
       next(error);
     }
   }
+
+  static async googleLogin(req, res, next) {
+    try {
+      const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+
+      const { access_token_google } = req.headers;
+
+      if (!access_token_google) {
+        throw { name: "BadRequest", message: "Google token is required" };
+      }
+
+      const ticket = await client.verifyIdToken({
+        idToken: access_token_google,
+        audience: process.env.GOOGLE_CLIENT_ID,
+      });
+
+      const payload = ticket.getPayload();
+
+      if (!payload.email_verified) {
+        throw { name: "BadRequest", message: "Google email is not verified" };
+      }
+
+      const [user] = await User.findOrCreate({
+        where: { email: payload.email },
+        defaults: {
+          username: payload.name || payload.email.split("@")[0],
+          password: Date.now().toString() + Math.random().toString(),
+          loginMethod: "google",
+          avatar: payload.picture || null,
+        },
+      });
+
+      const access_token = signToken({
+        id: user.id,
+        email: user.email,
+      });
+
+      res.status(200).json({ access_token });
+    } catch (error) {
+      next(error);
+    }
+  }
+
   static async getMyProfile(req, res, next) {
     try {
       const user = await User.findByPk(req.user.id, {
-        attributes: { exclude: ["password", "googleId"] },
+        attributes: { exclude: ["password"] },
         include: [
           {
             model: require("../models").TasteDNA,
@@ -102,7 +147,7 @@ class AuthController {
     }
   }
 
-  static async updatedMyProfile(req, res, next) {
+  static async updateMyProfile(req, res, next) {
     try {
       const { bio } = req.body;
 
