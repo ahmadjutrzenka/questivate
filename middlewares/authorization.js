@@ -5,7 +5,7 @@ const authorization = async (req, res, next) => {
     const { id } = req.params;
     const userId = req.user.id;
 
-    const isReviewRoute = req.baseUrl.includes("/reviews");
+    const isReviewRoute = req.baseUrl.endsWith("/reviews");
 
     if (isReviewRoute) {
       const review = await Review.findByPk(id);

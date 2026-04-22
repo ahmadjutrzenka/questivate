@@ -40,10 +40,25 @@ class CollectionController {
         status,
       } = req.body;
 
+      const existing = await Collection.findOne({
+        where: {
+          userId: req.user.id,
+          externalId: String(externalId),
+          mediaType,
+        },
+      });
+
+      if (existing) {
+        throw {
+          name: "BadRequest",
+          message: `${title || "This title"} is already in your collection`,
+        };
+      }
+
       const collection = await Collection.create({
         userId: req.user.id,
         mediaType,
-        externalId,
+        externalId: String(externalId),
         title,
         coverUrl,
         genres,
@@ -57,16 +72,14 @@ class CollectionController {
       next(error);
     }
   }
+
   static async getCollectionById(req, res, next) {
     try {
       const { id } = req.params;
       const collection = await Collection.findByPk(id);
 
       if (!collection) {
-        throw {
-          name: "NotFound",
-          message: "Collection not found",
-        };
+        throw { name: "NotFound", message: "Collection not found" };
       }
 
       res.status(200).json({ collection });
@@ -74,6 +87,7 @@ class CollectionController {
       next(error);
     }
   }
+
   static async updateCollection(req, res, next) {
     try {
       const { id } = req.params;
@@ -81,19 +95,9 @@ class CollectionController {
 
       const collection = await Collection.findByPk(id);
 
-      if (!collection) {
-        throw {
-          name: "NotFound",
-          message: "Collection not found",
-        };
-      }
-
       if (isFavorite === true && !collection.isFavorite) {
         const favoriteCount = await Collection.count({
-          where: {
-            userId: req.user.id,
-            isFavorite: true,
-          },
+          where: { userId: req.user.id, isFavorite: true },
         });
         if (favoriteCount >= 5) {
           throw {
@@ -102,24 +106,19 @@ class CollectionController {
           };
         }
       }
-      await collection.update({ status, isFavorite });
 
+      await collection.update({ status, isFavorite });
       res.status(200).json({ collection });
     } catch (error) {
       next(error);
     }
   }
+
   static async deleteCollection(req, res, next) {
     try {
       const { id } = req.params;
-      const collection = await Collection.findByPk(id);
 
-      if (!collection) {
-        throw {
-          name: "NotFound",
-          message: "Collection not found",
-        };
-      }
+      const collection = await Collection.findByPk(id);
 
       await collection.destroy();
       res.status(200).json({ message: `Collection ${id} has been deleted` });

@@ -22,9 +22,7 @@ module.exports = (sequelize, DataTypes) => {
         },
         onDelete: "CASCADE",
         validate: {
-          notNull: {
-            msg: "User ID is required",
-          },
+          notNull: { msg: "User ID is required" },
         },
       },
       mediaType: {
@@ -32,9 +30,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         values: ["anime", "manga", "game"],
         validate: {
-          notNull: {
-            msg: "Media type is required",
-          },
+          notNull: { msg: "Media type is required" },
           isIn: {
             args: [["anime", "manga", "game"]],
             msg: "Media type must be one of: anime, manga, game",
@@ -45,24 +41,16 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
-          notNull: {
-            msg: "External ID is required",
-          },
-          notEmpty: {
-            msg: "External ID cannot be empty",
-          },
+          notNull: { msg: "External ID is required" },
+          notEmpty: { msg: "External ID cannot be empty" },
         },
       },
       title: {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
-          notNull: {
-            msg: "Title is required",
-          },
-          notEmpty: {
-            msg: "Title cannot be empty",
-          },
+          notNull: { msg: "Title is required" },
+          notEmpty: { msg: "Title cannot be empty" },
         },
       },
       coverUrl: {
@@ -86,9 +74,7 @@ module.exports = (sequelize, DataTypes) => {
         values: ["plan", "ongoing", "completed", "dropped"],
         allowNull: false,
         validate: {
-          notNull: {
-            msg: "Status is required",
-          },
+          notNull: { msg: "Status is required" },
           isIn: {
             args: [["plan", "ongoing", "completed", "dropped"]],
             msg: "Status must be one of: plan, ongoing, completed, dropped",
@@ -104,6 +90,14 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: "Collection",
+      // Unique constraint: 1 user tidak bisa punya media yang sama 2x
+      indexes: [
+        {
+          unique: true,
+          fields: ["userId", "externalId", "mediaType"],
+          name: "unique_user_media",
+        },
+      ],
     },
   );
   return Collection;
