@@ -61,7 +61,7 @@ export const fetchRecentReviews = () => async (dispatch) => {
     const { data } = await axios.get(`${BASE_URL}/reviews/recent`, {
       headers: getHeaders(),
     });
-    dispatch(fetchReviewsSuccess(data.reviews));
+    dispatch(fetchReviewsSuccess(data));
   } catch (error) {
     dispatch(
       reviewFailed(error.response?.data?.message || "Failed to fetch reviews"),
@@ -75,7 +75,7 @@ export const createReview = (payload) => async (dispatch) => {
     const { data } = await axios.post(`${BASE_URL}/reviews`, payload, {
       headers: getHeaders(),
     });
-    dispatch(createReviewSuccess(data.review));
+    dispatch(createReviewSuccess(data));
   } catch (error) {
     dispatch(
       reviewFailed(error.response?.data?.message || "Failed to create review"),
@@ -86,10 +86,10 @@ export const createReview = (payload) => async (dispatch) => {
 export const updateReview = (id, payload) => async (dispatch) => {
   try {
     dispatch(reviewPending());
-    const { data } = await axios.put(`${BASE_URL}/reviews/${id}`, payload, {
+    const { data } = await axios.patch(`${BASE_URL}/reviews/${id}`, payload, {
       headers: getHeaders(),
     });
-    dispatch(updateReviewSuccess(data.review));
+    dispatch(updateReviewSuccess(data));
   } catch (error) {
     dispatch(
       reviewFailed(error.response?.data?.message || "Failed to update review"),
@@ -112,4 +112,4 @@ export const deleteReview = (id) => async (dispatch) => {
 };
 
 export const reviewReducer = reviewSlice.reducer;
-export default reviewSlice.reducer;
+export default reviewReducer;

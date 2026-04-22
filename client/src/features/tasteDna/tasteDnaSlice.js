@@ -12,4 +12,5 @@ const tasteDnaSlice = createSlice({
   reducers: {},
 });
 
-export default tasteDnaSlice.reducer;
+export const tasteDnaReducer = tasteDnaSlice.reducer;
+export default tasteDnaReducer;

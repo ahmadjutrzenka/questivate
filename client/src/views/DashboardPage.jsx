@@ -1,172 +1,141 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router";
 import { fetchCollections } from "../features/collection/collectionSlice";
 import { fetchRecentReviews } from "../features/review/reviewSlice";
 import MediaCard from "../components/MediaCard";
+import ReviewCarousel from "../components/ReviewCarousel.jsx";
 
 export default function DashboardPage() {
   const dispatch = useDispatch();
   const { user } = useSelector((s) => s.auth);
-  const { items: collections } = useSelector((s) => s.collection);
+  const { items } = useSelector((s) => s.collection);
   const { reviews } = useSelector((s) => s.review);
-  const [selectedReview, setSelectedReview] = useState(null);
 
   useEffect(() => {
     dispatch(fetchCollections());
     dispatch(fetchRecentReviews());
   }, [dispatch]);
 
-  const ongoing = collections.filter((c) => c.status === "ongoing");
-  const recentlyAdded = [...collections]
+  const ongoing = items.filter((c) => c.status === "ongoing");
+  const recent = [...items]
     .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
     .slice(0, 6);
-
   const stats = {
-    anime: collections.filter((c) => c.mediaType === "anime").length,
-    manga: collections.filter((c) => c.mediaType === "manga").length,
-    game: collections.filter((c) => c.mediaType === "game").length,
-    reviews: reviews.length,
+    anime: items.filter((c) => c.mediaType === "anime").length,
+    manga: items.filter((c) => c.mediaType === "manga").length,
+    game: items.filter((c) => c.mediaType === "game").length,
   };
 
+  const hour = new Date().getHours();
+  const greeting =
+    hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening";
+
   return (
-    <div className="p-6 max-w-6xl mx-auto text-white">
-      {/* Greeting */}
-      <section className="mb-8">
-        <h1 className="text-3xl font-bold">
-          Halo, {user?.username || "Questivator"} 👋
-        </h1>
-        <p className="text-gray-400 mt-1">
-          Ini ringkasan aktivitasmu hari ini.
-        </p>
-      </section>
-
-      {/* Stats Row */}
-      <section className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-        {[
-          { label: "Anime", count: stats.anime, icon: "🎌" },
-          { label: "Manga", count: stats.manga, icon: "📖" },
-          { label: "Game", count: stats.game, icon: "🎮" },
-          { label: "Reviews", count: stats.reviews, icon: "✍️" },
-        ].map(({ label, count, icon }) => (
-          <div
-            key={label}
-            className="bg-gray-800 rounded-xl p-4 flex items-center gap-3"
-          >
-            <span className="text-2xl">{icon}</span>
-            <div>
-              <p className="text-2xl font-bold">{count}</p>
-              <p className="text-gray-400 text-sm">{label}</p>
-            </div>
-          </div>
-        ))}
-      </section>
-
-      {/* Continue — Ongoing */}
-      {ongoing.length > 0 && (
-        <section className="mb-8">
-          <h2 className="text-xl font-semibold mb-3">Continue — Ongoing</h2>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-            {ongoing.slice(0, 6).map((item) => (
-              <MediaCard
-                key={item.id}
-                title={item.title}
-                coverUrl={item.coverUrl}
-                mediaType={item.mediaType}
-                status={item.status}
-                score={item.score}
-                isFavorite={item.isFavorite}
-              />
-            ))}
-          </div>
-        </section>
-      )}
-
-      {/* Recently Added */}
-      {recentlyAdded.length > 0 && (
-        <section className="mb-8">
-          <h2 className="text-xl font-semibold mb-3">Recently Added</h2>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-            {recentlyAdded.map((item) => (
-              <MediaCard
-                key={item.id}
-                title={item.title}
-                coverUrl={item.coverUrl}
-                mediaType={item.mediaType}
-                status={item.status}
-                score={item.score}
-                isFavorite={item.isFavorite}
-              />
-            ))}
-          </div>
-        </section>
-      )}
-
-      {/* Recent Reviews Carousel */}
-      {reviews.length > 0 && (
-        <section className="mb-8">
-          <h2 className="text-xl font-semibold mb-3">Recent Reviews</h2>
-          <div className="flex gap-4 overflow-x-auto pb-2">
-            {reviews.map((review) => (
-              <div
-                key={review.id}
-                onClick={() => setSelectedReview(review)}
-                className="min-w-[220px] bg-gray-800 rounded-xl p-4 cursor-pointer hover:bg-gray-700 transition"
-              >
-                <p className="font-semibold truncate">
-                  {review.collection?.title || "Unknown"}
-                </p>
-                <p className="text-yellow-400 text-sm mt-1">
-                  ⭐ {review.score}/10
-                </p>
-                <p className="text-gray-400 text-xs mt-2 line-clamp-3">
-                  {review.content}
-                </p>
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
-
-      {/* CTA Discover */}
-      <section className="bg-indigo-700 rounded-2xl p-6 flex items-center justify-between">
+    <div className="dashboard">
+      {/* Hero */}
+      <section className="dashboard-hero">
         <div>
-          <h3 className="text-xl font-bold">Got nothing to watch?</h3>
-          <p className="text-indigo-200 mt-1 text-sm">
-            Find new stuff to add to your collection!
+          <p className="greeting">
+            {greeting}, {user?.username}
           </p>
+          <h1>Your collection, your vibe.</h1>
+          {user?.TasteDNA && (
+            <p className="dna-excerpt">
+              "{user.TasteDNA.content.slice(0, 180)}..."
+            </p>
+          )}
         </div>
-        <a
-          href="/search"
-          className="bg-white text-indigo-700 font-semibold px-5 py-2 rounded-xl hover:bg-indigo-50 transition"
-        >
-          Find now
-        </a>
+        <div className="hero-ctas">
+          <Link to="/vibe-match" className="btn-primary">
+            Find your vibe
+          </Link>
+          <Link to="/collections" className="btn-secondary">
+            Title match
+          </Link>
+        </div>
       </section>
 
-      {/* Review Modal */}
-      {selectedReview && (
-        <div
-          className="fixed inset-0 bg-black/70 flex items-center justify-center z-50"
-          onClick={() => setSelectedReview(null)}
-        >
-          <div
-            className="bg-gray-900 rounded-2xl p-6 max-w-md w-full mx-4"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <h3 className="text-lg font-bold mb-1">
-              {selectedReview.collection?.title}
-            </h3>
-            <p className="text-yellow-400 mb-3">⭐ {selectedReview.score}/10</p>
-            <p className="text-gray-300 text-sm">{selectedReview.content}</p>
-            <button
-              onClick={() => setSelectedReview(null)}
-              className="mt-4 text-gray-500 hover:text-white text-sm"
-            >
-              Tutup
-            </button>
-          </div>
+      {/* Stats */}
+      <section className="stats-row">
+        <div className="stat-card">
+          <span className="stat-label anime-label">Anime</span>
+          <span className="stat-num">{stats.anime}</span>
         </div>
+        <div className="stat-card">
+          <span className="stat-label manga-label">Manga</span>
+          <span className="stat-num">{stats.manga}</span>
+        </div>
+        <div className="stat-card">
+          <span className="stat-label game-label">Game</span>
+          <span className="stat-num">{stats.game}</span>
+        </div>
+      </section>
+
+      {/* Continue */}
+      {ongoing.length > 0 && (
+        <section className="section">
+          <div className="section-header">
+            <h2>Continue</h2>
+          </div>
+          <div className="card-grid">
+            {ongoing.slice(0, 4).map((c) => (
+              <MediaCard
+                key={c.id}
+                id={c.id}
+                title={c.title}
+                coverUrl={c.coverUrl}
+                mediaType={c.mediaType}
+                status={c.status}
+                score={c.score}
+                isFavorite={c.isFavorite}
+                externalId={c.externalId}
+              />
+            ))}
+          </div>
+        </section>
       )}
+
+      {/* Recently added */}
+      <section className="section">
+        <div className="section-header">
+          <h2>Recently added</h2>
+          <Link to="/collections">See all</Link>
+        </div>
+        <div className="card-grid">
+          {recent.map((c) => (
+            <MediaCard
+              key={c.id}
+              id={c.id}
+              title={c.title}
+              coverUrl={c.coverUrl}
+              mediaType={c.mediaType}
+              status={c.status}
+              score={c.score}
+              isFavorite={c.isFavorite}
+              externalId={c.externalId}
+            />
+          ))}
+        </div>
+      </section>
+
+      {/* Reviews carousel */}
+      <section className="section">
+        <h2>Recent reviews</h2>
+        <ReviewCarousel reviews={reviews} />
+      </section>
+
+      {/* Discover CTA */}
+      <section className="discover-ctas">
+        <Link to="/vibe-match" className="cta-card">
+          <h3>Vibe Match</h3>
+          <p>Pick titles, AI finds what to watch, read, or play next.</p>
+        </Link>
+        <Link to="/collections" className="cta-card">
+          <h3>Title Match</h3>
+          <p>Choose one title, find its counterparts across all three media.</p>
+        </Link>
+      </section>
     </div>
   );
 }

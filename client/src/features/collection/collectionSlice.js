@@ -93,7 +93,7 @@ export const addToCollection = (payload) => async (dispatch) => {
 export const updateCollection = (id, body) => async (dispatch) => {
   try {
     dispatch(collectionPending());
-    const { data } = await axios.put(`${BASE_URL}/collections/${id}`, body, {
+    const { data } = await axios.patch(`${BASE_URL}/collections/${id}`, body, {
       headers: getHeaders(),
     });
     dispatch(updateItemSuccess(data.collection));
@@ -124,4 +124,4 @@ export const removeFromCollection = (id) => async (dispatch) => {
 };
 
 export const collectionReducer = collectionSlice.reducer;
-export default collectionSlice.reducer;
+export default collectionReducer;

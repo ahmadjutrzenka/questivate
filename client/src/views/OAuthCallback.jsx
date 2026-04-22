@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router";
 import { useDispatch } from "react-redux";
-import { fetchProfile } from "../features/auth/authSlice";
+import { loginSuccess, fetchProfile } from "../features/auth/authSlice";
 
 export default function OAuthCallback() {
   const [params] = useSearchParams();
@@ -12,6 +12,7 @@ export default function OAuthCallback() {
     const token = params.get("token");
     if (token) {
       localStorage.setItem("access_token", token);
+      dispatch(loginSuccess(token));
       dispatch(fetchProfile());
     }
     navigate("/");

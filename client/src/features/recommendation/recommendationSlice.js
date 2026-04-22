@@ -12,4 +12,5 @@ const recommendationSlice = createSlice({
   reducers: {},
 });
 
-export default recommendationSlice.reducer;
+export const recommendationReducer = recommendationSlice.reducer;
+export default recommendationReducer;
