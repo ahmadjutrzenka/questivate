@@ -1,3 +1,3 @@
 export default function SearchPage() {
-  return <div>Search</div>;
+  return <div className="p-6 text-white">Search — coming soon</div>;
 }

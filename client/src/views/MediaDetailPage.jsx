@@ -1,3 +1,3 @@
 export default function MediaDetailPage() {
-  return <div>Media Detail</div>;
+  return <div className="p-6 text-white">Media Detail — coming soon</div>;
 }
