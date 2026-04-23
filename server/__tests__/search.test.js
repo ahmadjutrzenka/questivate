@@ -58,6 +58,36 @@ jest.mock("../helpers/externalApis", () => ({
     summary: "Open world game.",
     involved_companies: [{ company: { name: "Rockstar Games" } }],
   }),
+  getTopJikanAnime: jest.fn().mockResolvedValue([
+    {
+      mal_id: 1535,
+      title: "Death Note",
+      images: { jpg: { image_url: "http://img.url" } },
+      score: 9.0,
+      genres: [{ name: "Mystery" }],
+      synopsis: "A notebook...",
+    },
+  ]),
+  getTopJikanManga: jest.fn().mockResolvedValue([
+    {
+      mal_id: 25,
+      title: "Fullmetal Alchemist",
+      images: { jpg: { image_url: "http://img.url" } },
+      score: 9.1,
+      genres: [{ name: "Action" }],
+      synopsis: "Two brothers...",
+    },
+  ]),
+  getTopIGDB: jest.fn().mockResolvedValue([
+    {
+      id: 1942,
+      name: "Grand Theft Auto V",
+      cover: { url: "//images.igdb.com/t_thumb/abc.jpg" },
+      rating: 96,
+      genres: [{ name: "Adventure" }],
+      summary: "Open world game.",
+    },
+  ]),
   enrichAIResults: jest.fn(),
   getIGDBToken: jest.fn(),
 }));
@@ -207,6 +237,77 @@ describe("GET /search", () => {
   it("401 — tanpa token", async () => {
     const res = await request(app).get("/search?q=test");
     expect(res.status).toBe(401);
+  });
+});
+
+describe("GET /search/popular", () => {
+  it("200 — mengembalikan anime, manga, game popular", async () => {
+    const res = await request(app)
+      .get("/search/popular")
+      .set("Authorization", `Bearer ${token}`);
+
+    expect(res.status).toBe(200);
+    expect(res.body).toHaveProperty("anime");
+    expect(res.body).toHaveProperty("manga");
+    expect(res.body).toHaveProperty("game");
+    expect(res.body.anime[0]).toHaveProperty("mediaType", "anime");
+    expect(res.body.manga[0]).toHaveProperty("mediaType", "manga");
+    expect(res.body.game[0]).toHaveProperty("mediaType", "game");
+    expect(res.body.game[0].coverUrl).toMatch(/^https:/);
+  });
+
+  it("200 — fallback null/[] tetap benar saat field eksternal kosong", async () => {
+    externalApis.getTopJikanAnime.mockResolvedValueOnce([
+      {
+        mal_id: 901,
+        title: "Anime Bare",
+      },
+    ]);
+    externalApis.getTopJikanManga.mockResolvedValueOnce([
+      {
+        mal_id: 902,
+        title: "Manga Bare",
+      },
+    ]);
+    externalApis.getTopIGDB.mockResolvedValueOnce([
+      {
+        id: 903,
+        name: "Game Bare",
+      },
+    ]);
+
+    const res = await request(app)
+      .get("/search/popular")
+      .set("Authorization", `Bearer ${token}`);
+
+    expect(res.status).toBe(200);
+    expect(res.body.anime[0]).toMatchObject({
+      externalId: "901",
+      title: "Anime Bare",
+      coverUrl: null,
+      score: null,
+      genres: [],
+      synopsis: null,
+      mediaType: "anime",
+    });
+    expect(res.body.manga[0]).toMatchObject({
+      externalId: "902",
+      title: "Manga Bare",
+      coverUrl: null,
+      score: null,
+      genres: [],
+      synopsis: null,
+      mediaType: "manga",
+    });
+    expect(res.body.game[0]).toMatchObject({
+      externalId: "903",
+      title: "Game Bare",
+      coverUrl: null,
+      score: null,
+      genres: [],
+      synopsis: null,
+      mediaType: "game",
+    });
   });
 });
 

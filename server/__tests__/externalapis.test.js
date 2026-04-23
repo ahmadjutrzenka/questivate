@@ -10,6 +10,9 @@ const {
   getDetailJikan,
   getDetailIGDB,
   enrichAIResults,
+  getTopJikanAnime,
+  getTopJikanManga,
+  getTopIGDB,
 } = require("../helpers/externalApis");
 
 beforeEach(() => {
@@ -304,5 +307,81 @@ describe("enrichAIResults", () => {
     expect(enriched.manga[0].externalId).toBeNull();
     expect(enriched.game[0].coverUrl).toBeNull();
     expect(enriched.game[0].externalId).toBeNull();
+  });
+});
+
+// ─── getTopJikanAnime ─────────────────────────────────────────────────────
+describe("getTopJikanAnime", () => {
+  it("mengembalikan daftar anime top dari Jikan", async () => {
+    axios.get.mockResolvedValueOnce({
+      data: {
+        data: [{ mal_id: 1, title: "Top Anime" }],
+      },
+    });
+
+    const result = await getTopJikanAnime(3);
+    expect(result).toEqual([{ mal_id: 1, title: "Top Anime" }]);
+    expect(axios.get).toHaveBeenCalledWith(
+      "https://api.jikan.moe/v4/top/anime",
+      expect.objectContaining({ params: { limit: 3 } }),
+    );
+  });
+
+  it("mengembalikan array kosong jika data top anime kosong", async () => {
+    axios.get.mockResolvedValueOnce({ data: {} });
+    const result = await getTopJikanAnime();
+    expect(result).toEqual([]);
+  });
+});
+
+// ─── getTopJikanManga ─────────────────────────────────────────────────────
+describe("getTopJikanManga", () => {
+  it("mengembalikan daftar manga top dari Jikan", async () => {
+    axios.get.mockResolvedValueOnce({
+      data: {
+        data: [{ mal_id: 2, title: "Top Manga" }],
+      },
+    });
+
+    const result = await getTopJikanManga(5);
+    expect(result).toEqual([{ mal_id: 2, title: "Top Manga" }]);
+    expect(axios.get).toHaveBeenCalledWith(
+      "https://api.jikan.moe/v4/top/manga",
+      expect.objectContaining({ params: { limit: 5 } }),
+    );
+  });
+
+  it("mengembalikan array kosong jika data top manga kosong", async () => {
+    axios.get.mockResolvedValueOnce({ data: {} });
+    const result = await getTopJikanManga();
+    expect(result).toEqual([]);
+  });
+});
+
+// ─── getTopIGDB ───────────────────────────────────────────────────────────
+describe("getTopIGDB", () => {
+  it("mengembalikan daftar game top dari IGDB", async () => {
+    axios.post.mockResolvedValueOnce({
+      data: [
+        {
+          id: 1942,
+          name: "Grand Theft Auto V",
+        },
+      ],
+    });
+
+    const result = await getTopIGDB(4);
+    expect(result).toEqual([{ id: 1942, name: "Grand Theft Auto V" }]);
+    expect(axios.post).toHaveBeenCalledWith(
+      "https://api.igdb.com/v4/games",
+      expect.stringContaining("limit 4;"),
+      expect.objectContaining({ headers: expect.any(Object) }),
+    );
+  });
+
+  it("mengembalikan array kosong jika top game kosong", async () => {
+    axios.post.mockResolvedValueOnce({ data: [] });
+    const result = await getTopIGDB();
+    expect(result).toEqual([]);
   });
 });
