@@ -102,7 +102,7 @@ export default function DashboardPage() {
           <h3>Vibe Match</h3>
           <p>Pick titles, AI finds what to watch, read, or play next.</p>
         </Link>
-        <Link to="/collections" className="cta-card">
+        <Link to="/collections?mode=title-match" className="cta-card">
           <h3>Title Match</h3>
           <p>Choose one title, find its counterparts across all three media.</p>
         </Link>

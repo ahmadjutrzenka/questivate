@@ -25,10 +25,16 @@ export const reviewSlice = createSlice({
       state.loading = false;
     },
     updateReviewSuccess: (state, action) => {
-      const idx = state.reviews.findIndex((r) => r.id === action.payload.id);
+      const idx = state.reviews.findIndex(
+        (r) => String(r.id) === String(action.payload.id),
+      );
+
       if (idx !== -1) {
-        state.reviews[idx] = action.payload;
+        const updatedReview = { ...state.reviews[idx], ...action.payload };
+        state.reviews.splice(idx, 1);
+        state.reviews.unshift(updatedReview);
       }
+
       state.loading = false;
     },
     deleteReviewSuccess: (state, action) => {

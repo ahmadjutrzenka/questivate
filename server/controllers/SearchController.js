@@ -136,7 +136,7 @@ class SearchController {
     try {
       const { q, type = "all" } = req.query;
 
-      if (!q) {
+      if (!q && type !== "user") {
         throw {
           name: "BadRequest",
           message: "Query parameter 'q' is required",

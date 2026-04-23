@@ -57,7 +57,7 @@ async function getDetailIGDB(id) {
   const token = await getIGDBToken();
   const response = await axios.post(
     "https://api.igdb.com/v4/games",
-    `fields name,cover.url,genres.name,summary,rating,first_release_date,involved_companies.company.name; where id = ${id};`,
+    `fields name,cover.url,genres.name,themes.name,summary,storyline,rating,rating_count,first_release_date,involved_companies.company.name,involved_companies.developer,involved_companies.publisher,platforms.name; where id = ${id};`,
     {
       headers: {
         "Client-ID": process.env.IGDB_CLIENT_ID,
