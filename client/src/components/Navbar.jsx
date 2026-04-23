@@ -53,12 +53,12 @@ export default function Navbar() {
             Search
           </NavLink>
           <NavLink
-            to="/vibe-match"
+            to="/vibe-check"
             className={({ isActive }) =>
               isActive ? "nav-link active" : "nav-link"
             }
           >
-            Vibe Match
+            Vibe Check
           </NavLink>
         </div>
 

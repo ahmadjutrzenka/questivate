@@ -14,11 +14,16 @@ export default function RegisterPage() {
     dispatch(register(form.username, form.email, form.password));
   };
 
+  useEffect(() => {
+    if (error) {
+      toast.error(error);
+    }
+  }, [error]);
+
   return (
     <div className="auth-page">
       <div className="auth-card">
         <h1 className="auth-title">Register</h1>
-        {error && <p className="auth-error">{error}</p>}
         <form onSubmit={handleSubmit} className="auth-form">
           <input
             type="text"

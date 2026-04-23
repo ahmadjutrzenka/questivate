@@ -81,12 +81,14 @@ export const addToCollection = (payload) => async (dispatch) => {
       headers: getHeaders(),
     });
     dispatch(addItemSuccess(data.collection));
+    return true;
   } catch (error) {
     dispatch(
       collectionFailed(
         error.response?.data?.message || "Failed to add item to collection",
       ),
     );
+    return false;
   }
 };
 
@@ -97,12 +99,14 @@ export const updateCollection = (id, body) => async (dispatch) => {
       headers: getHeaders(),
     });
     dispatch(updateItemSuccess(data.collection));
+    return true;
   } catch (error) {
     dispatch(
       collectionFailed(
         error.response?.data?.message || "Failed to update collection",
       ),
     );
+    return false;
   }
 };
 
@@ -113,6 +117,7 @@ export const removeFromCollection = (id) => async (dispatch) => {
       headers: getHeaders(),
     });
     dispatch(removeItemSuccess(id));
+    return true;
   } catch (error) {
     dispatch(
       collectionFailed(
@@ -120,6 +125,7 @@ export const removeFromCollection = (id) => async (dispatch) => {
           "Failed to remove item from collection",
       ),
     );
+    return false;
   }
 };
 

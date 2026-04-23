@@ -47,10 +47,10 @@ export default function DashboardPage() {
           )}
         </div>
         <div className="hero-ctas">
-          <Link to="/vibe-match" className="btn-primary">
+          <Link to="/vibe-check" className="btn-primary">
             Vibe Check
           </Link>
-          <Link to="/collections" className="btn-secondary">
+          <Link to="/collections" className="btn-primary">
             Title match
           </Link>
         </div>
@@ -98,8 +98,8 @@ export default function DashboardPage() {
 
       {/* Discover CTA */}
       <section className="discover-ctas">
-        <Link to="/vibe-match" className="cta-card">
-          <h3>Vibe Match</h3>
+        <Link to="/vibe-check" className="cta-card">
+          <h3>Vibe Check</h3>
           <p>Pick titles, AI finds what to watch, read, or play next.</p>
         </Link>
         <Link to="/collections?mode=title-match" className="cta-card">

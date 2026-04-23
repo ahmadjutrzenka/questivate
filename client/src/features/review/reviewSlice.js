@@ -82,10 +82,12 @@ export const createReview = (payload) => async (dispatch) => {
       headers: getHeaders(),
     });
     dispatch(createReviewSuccess(data));
+    return true;
   } catch (error) {
     dispatch(
       reviewFailed(error.response?.data?.message || "Failed to create review"),
     );
+    return false;
   }
 };
 
@@ -96,10 +98,12 @@ export const updateReview = (id, payload) => async (dispatch) => {
       headers: getHeaders(),
     });
     dispatch(updateReviewSuccess(data));
+    return true;
   } catch (error) {
     dispatch(
       reviewFailed(error.response?.data?.message || "Failed to update review"),
     );
+    return false;
   }
 };
 
@@ -110,10 +114,12 @@ export const deleteReview = (id) => async (dispatch) => {
       headers: getHeaders(),
     });
     dispatch(deleteReviewSuccess(id));
+    return true;
   } catch (error) {
     dispatch(
       reviewFailed(error.response?.data?.message || "Failed to delete review"),
     );
+    return false;
   }
 };
 

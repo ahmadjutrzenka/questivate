@@ -21,7 +21,11 @@
           "request": {
             "method": "POST",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "url": { "raw": "{{base_url}}/auth/register", "host": ["{{base_url}}"], "path": ["auth", "register"] },
+            "url": {
+              "raw": "{{base_url}}/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "register"]
+            },
             "body": {
               "mode": "raw",
               "raw": "{\n  \"username\": \"ahmad\",\n  \"email\": \"ahmad@mail.com\",\n  \"password\": \"password123\"\n}"
@@ -33,7 +37,11 @@
           "request": {
             "method": "POST",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "url": { "raw": "{{base_url}}/auth/register", "host": ["{{base_url}}"], "path": ["auth", "register"] },
+            "url": {
+              "raw": "{{base_url}}/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "register"]
+            },
             "body": {
               "mode": "raw",
               "raw": "{\n  \"username\": \"tryagain\",\n  \"email\": \"google_user@gmail.com\",\n  \"password\": \"password123\"\n}"
@@ -45,7 +53,11 @@
           "request": {
             "method": "POST",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "url": { "raw": "{{base_url}}/auth/register", "host": ["{{base_url}}"], "path": ["auth", "register"] },
+            "url": {
+              "raw": "{{base_url}}/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "register"]
+            },
             "body": {
               "mode": "raw",
               "raw": "{\n  \"email\": \"nousername@mail.com\",\n  \"password\": \"password123\"\n}"
@@ -68,7 +80,11 @@
           "request": {
             "method": "POST",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "url": { "raw": "{{base_url}}/auth/login", "host": ["{{base_url}}"], "path": ["auth", "login"] },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "login"]
+            },
             "body": {
               "mode": "raw",
               "raw": "{\n  \"email\": \"ahmad@mail.com\",\n  \"password\": \"password123\"\n}"
@@ -80,7 +96,11 @@
           "request": {
             "method": "POST",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "url": { "raw": "{{base_url}}/auth/login", "host": ["{{base_url}}"], "path": ["auth", "login"] },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "login"]
+            },
             "body": {
               "mode": "raw",
               "raw": "{\n  \"email\": \"ahmad@mail.com\",\n  \"password\": \"salahpassword\"\n}"
@@ -92,7 +112,11 @@
           "request": {
             "method": "POST",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "url": { "raw": "{{base_url}}/auth/login", "host": ["{{base_url}}"], "path": ["auth", "login"] },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "login"]
+            },
             "body": {
               "mode": "raw",
               "raw": "{\n  \"password\": \"password123\"\n}"
@@ -105,9 +129,16 @@
             "method": "POST",
             "header": [
               { "key": "Content-Type", "value": "application/json" },
-              { "key": "access_token_google", "value": "PASTE_GOOGLE_ID_TOKEN_HERE" }
+              {
+                "key": "access_token_google",
+                "value": "PASTE_GOOGLE_ID_TOKEN_HERE"
+              }
             ],
-            "url": { "raw": "{{base_url}}/auth/google-login", "host": ["{{base_url}}"], "path": ["auth", "google-login"] },
+            "url": {
+              "raw": "{{base_url}}/auth/google-login",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "google-login"]
+            },
             "body": { "mode": "raw", "raw": "{}" }
           }
         },
@@ -116,7 +147,11 @@
           "request": {
             "method": "GET",
             "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
-            "url": { "raw": "{{base_url}}/auth/profile", "host": ["{{base_url}}"], "path": ["auth", "profile"] }
+            "url": {
+              "raw": "{{base_url}}/auth/profile",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "profile"]
+            }
           }
         },
         {
@@ -124,7 +159,11 @@
           "request": {
             "method": "GET",
             "header": [],
-            "url": { "raw": "{{base_url}}/auth/profile", "host": ["{{base_url}}"], "path": ["auth", "profile"] }
+            "url": {
+              "raw": "{{base_url}}/auth/profile",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "profile"]
+            }
           }
         },
         {
@@ -135,7 +174,11 @@
               { "key": "Authorization", "value": "Bearer {{token}}" },
               { "key": "Content-Type", "value": "application/json" }
             ],
-            "url": { "raw": "{{base_url}}/auth/profile", "host": ["{{base_url}}"], "path": ["auth", "profile"] },
+            "url": {
+              "raw": "{{base_url}}/auth/profile",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "profile"]
+            },
             "body": {
               "mode": "raw",
               "raw": "{\n  \"bio\": \"Anime enjoyer, manga reader, gamer. Taste: dark atmosphere, complex characters.\"\n}"
@@ -151,7 +194,11 @@
           "name": "Get All Users",
           "request": {
             "method": "GET",
-            "url": { "raw": "{{base_url}}/users", "host": ["{{base_url}}"], "path": ["users"] }
+            "url": {
+              "raw": "{{base_url}}/users",
+              "host": ["{{base_url}}"],
+              "path": ["users"]
+            }
           }
         },
         {
@@ -170,14 +217,22 @@
           "name": "Get Public Profile by username",
           "request": {
             "method": "GET",
-            "url": { "raw": "{{base_url}}/users/ahmad", "host": ["{{base_url}}"], "path": ["users", "ahmad"] }
+            "url": {
+              "raw": "{{base_url}}/users/ahmad",
+              "host": ["{{base_url}}"],
+              "path": ["users", "ahmad"]
+            }
           }
         },
         {
           "name": "Get Public Profile — not found (404)",
           "request": {
             "method": "GET",
-            "url": { "raw": "{{base_url}}/users/usertidakada", "host": ["{{base_url}}"], "path": ["users", "usertidakada"] }
+            "url": {
+              "raw": "{{base_url}}/users/usertidakada",
+              "host": ["{{base_url}}"],
+              "path": ["users", "usertidakada"]
+            }
           }
         }
       ]
@@ -190,7 +245,11 @@
           "request": {
             "method": "GET",
             "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
-            "url": { "raw": "{{base_url}}/collections", "host": ["{{base_url}}"], "path": ["collections"] }
+            "url": {
+              "raw": "{{base_url}}/collections",
+              "host": ["{{base_url}}"],
+              "path": ["collections"]
+            }
           }
         },
         {
@@ -238,7 +297,11 @@
               { "key": "Authorization", "value": "Bearer {{token}}" },
               { "key": "Content-Type", "value": "application/json" }
             ],
-            "url": { "raw": "{{base_url}}/collections", "host": ["{{base_url}}"], "path": ["collections"] },
+            "url": {
+              "raw": "{{base_url}}/collections",
+              "host": ["{{base_url}}"],
+              "path": ["collections"]
+            },
             "body": {
               "mode": "raw",
               "raw": "{\n  \"mediaType\": \"anime\",\n  \"externalId\": \"5114\",\n  \"title\": \"Fullmetal Alchemist: Brotherhood\",\n  \"coverUrl\": \"https://cdn.myanimelist.net/images/anime/1208/94745.jpg\",\n  \"genres\": [\"Action\", \"Adventure\", \"Drama\", \"Fantasy\"],\n  \"synopsis\": \"Two brothers search for the Philosopher's Stone after a botched alchemy experiment.\",\n  \"score\": 9.11,\n  \"status\": \"completed\"\n}"
@@ -253,7 +316,11 @@
               { "key": "Authorization", "value": "Bearer {{token}}" },
               { "key": "Content-Type", "value": "application/json" }
             ],
-            "url": { "raw": "{{base_url}}/collections", "host": ["{{base_url}}"], "path": ["collections"] },
+            "url": {
+              "raw": "{{base_url}}/collections",
+              "host": ["{{base_url}}"],
+              "path": ["collections"]
+            },
             "body": {
               "mode": "raw",
               "raw": "{\n  \"mediaType\": \"manga\",\n  \"externalId\": \"13\",\n  \"title\": \"One Piece\",\n  \"coverUrl\": \"https://cdn.myanimelist.net/images/manga/2/253146.jpg\",\n  \"genres\": [\"Action\", \"Adventure\", \"Comedy\", \"Fantasy\"],\n  \"synopsis\": \"Monkey D. Luffy sets out to become King of the Pirates.\",\n  \"score\": 9.2,\n  \"status\": \"ongoing\"\n}"
@@ -268,7 +335,11 @@
               { "key": "Authorization", "value": "Bearer {{token}}" },
               { "key": "Content-Type", "value": "application/json" }
             ],
-            "url": { "raw": "{{base_url}}/collections", "host": ["{{base_url}}"], "path": ["collections"] },
+            "url": {
+              "raw": "{{base_url}}/collections",
+              "host": ["{{base_url}}"],
+              "path": ["collections"]
+            },
             "body": {
               "mode": "raw",
               "raw": "{\n  \"mediaType\": \"game\",\n  \"externalId\": \"1877\",\n  \"title\": \"Sekiro: Shadows Die Twice\",\n  \"coverUrl\": \"https://images.igdb.com/igdb/image/upload/t_cover_big/co1jq1.jpg\",\n  \"genres\": [\"Action\", \"Adventure\"],\n  \"synopsis\": \"A shinobi must rescue his lord and get revenge.\",\n  \"score\": 9.0,\n  \"status\": \"ongoing\"\n}"
@@ -283,7 +354,11 @@
               { "key": "Authorization", "value": "Bearer {{token}}" },
               { "key": "Content-Type", "value": "application/json" }
             ],
-            "url": { "raw": "{{base_url}}/collections", "host": ["{{base_url}}"], "path": ["collections"] },
+            "url": {
+              "raw": "{{base_url}}/collections",
+              "host": ["{{base_url}}"],
+              "path": ["collections"]
+            },
             "body": {
               "mode": "raw",
               "raw": "{\n  \"mediaType\": \"anime\",\n  \"externalId\": \"5114\"\n}"
@@ -295,7 +370,11 @@
           "request": {
             "method": "GET",
             "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
-            "url": { "raw": "{{base_url}}/collections/{{collection_id}}", "host": ["{{base_url}}"], "path": ["collections", "{{collection_id}}"] }
+            "url": {
+              "raw": "{{base_url}}/collections/{{collection_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["collections", "{{collection_id}}"]
+            }
           }
         },
         {
@@ -306,7 +385,11 @@
               { "key": "Authorization", "value": "Bearer {{token}}" },
               { "key": "Content-Type", "value": "application/json" }
             ],
-            "url": { "raw": "{{base_url}}/collections/{{collection_id}}", "host": ["{{base_url}}"], "path": ["collections", "{{collection_id}}"] },
+            "url": {
+              "raw": "{{base_url}}/collections/{{collection_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["collections", "{{collection_id}}"]
+            },
             "body": {
               "mode": "raw",
               "raw": "{\n  \"status\": \"completed\",\n  \"isFavorite\": true\n}"
@@ -321,7 +404,11 @@
               { "key": "Authorization", "value": "Bearer {{token}}" },
               { "key": "Content-Type", "value": "application/json" }
             ],
-            "url": { "raw": "{{base_url}}/collections/{{collection_id}}", "host": ["{{base_url}}"], "path": ["collections", "{{collection_id}}"] },
+            "url": {
+              "raw": "{{base_url}}/collections/{{collection_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["collections", "{{collection_id}}"]
+            },
             "body": {
               "mode": "raw",
               "raw": "{\n  \"isFavorite\": true\n}"
@@ -336,7 +423,11 @@
               { "key": "Authorization", "value": "Bearer {{token2}}" },
               { "key": "Content-Type", "value": "application/json" }
             ],
-            "url": { "raw": "{{base_url}}/collections/{{collection_id}}", "host": ["{{base_url}}"], "path": ["collections", "{{collection_id}}"] },
+            "url": {
+              "raw": "{{base_url}}/collections/{{collection_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["collections", "{{collection_id}}"]
+            },
             "body": {
               "mode": "raw",
               "raw": "{\n  \"status\": \"dropped\"\n}"
@@ -348,7 +439,11 @@
           "request": {
             "method": "DELETE",
             "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
-            "url": { "raw": "{{base_url}}/collections/{{collection_id}}", "host": ["{{base_url}}"], "path": ["collections", "{{collection_id}}"] }
+            "url": {
+              "raw": "{{base_url}}/collections/{{collection_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["collections", "{{collection_id}}"]
+            }
           }
         },
         {
@@ -356,7 +451,11 @@
           "request": {
             "method": "DELETE",
             "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
-            "url": { "raw": "{{base_url}}/collections/999999", "host": ["{{base_url}}"], "path": ["collections", "999999"] }
+            "url": {
+              "raw": "{{base_url}}/collections/999999",
+              "host": ["{{base_url}}"],
+              "path": ["collections", "999999"]
+            }
           }
         }
       ]
@@ -368,21 +467,33 @@
           "name": "Get Recent Reviews (public)",
           "request": {
             "method": "GET",
-            "url": { "raw": "{{base_url}}/reviews/recent", "host": ["{{base_url}}"], "path": ["reviews", "recent"] }
+            "url": {
+              "raw": "{{base_url}}/reviews/recent",
+              "host": ["{{base_url}}"],
+              "path": ["reviews", "recent"]
+            }
           }
         },
         {
           "name": "Get Review by ID (public)",
           "request": {
             "method": "GET",
-            "url": { "raw": "{{base_url}}/reviews/{{review_id}}", "host": ["{{base_url}}"], "path": ["reviews", "{{review_id}}"] }
+            "url": {
+              "raw": "{{base_url}}/reviews/{{review_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["reviews", "{{review_id}}"]
+            }
           }
         },
         {
           "name": "Get Review by ID — not found (404)",
           "request": {
             "method": "GET",
-            "url": { "raw": "{{base_url}}/reviews/999999", "host": ["{{base_url}}"], "path": ["reviews", "999999"] }
+            "url": {
+              "raw": "{{base_url}}/reviews/999999",
+              "host": ["{{base_url}}"],
+              "path": ["reviews", "999999"]
+            }
           }
         },
         {
@@ -404,7 +515,11 @@
               { "key": "Authorization", "value": "Bearer {{token}}" },
               { "key": "Content-Type", "value": "application/json" }
             ],
-            "url": { "raw": "{{base_url}}/reviews", "host": ["{{base_url}}"], "path": ["reviews"] },
+            "url": {
+              "raw": "{{base_url}}/reviews",
+              "host": ["{{base_url}}"],
+              "path": ["reviews"]
+            },
             "body": {
               "mode": "raw",
               "raw": "{\n  \"collectionId\": {{collection_id}},\n  \"rating\": 9.5,\n  \"content\": \"Masterpiece. The alchemy system and character development are unmatched.\"\n}"
@@ -419,7 +534,11 @@
               { "key": "Authorization", "value": "Bearer {{token}}" },
               { "key": "Content-Type", "value": "application/json" }
             ],
-            "url": { "raw": "{{base_url}}/reviews", "host": ["{{base_url}}"], "path": ["reviews"] },
+            "url": {
+              "raw": "{{base_url}}/reviews",
+              "host": ["{{base_url}}"],
+              "path": ["reviews"]
+            },
             "body": {
               "mode": "raw",
               "raw": "{\n  \"collectionId\": {{collection_id}}\n}"
@@ -434,7 +553,11 @@
               { "key": "Authorization", "value": "Bearer {{token2}}" },
               { "key": "Content-Type", "value": "application/json" }
             ],
-            "url": { "raw": "{{base_url}}/reviews", "host": ["{{base_url}}"], "path": ["reviews"] },
+            "url": {
+              "raw": "{{base_url}}/reviews",
+              "host": ["{{base_url}}"],
+              "path": ["reviews"]
+            },
             "body": {
               "mode": "raw",
               "raw": "{\n  \"collectionId\": {{collection_id}},\n  \"rating\": 7.0,\n  \"content\": \"Trying to review someone else's collection.\"\n}"
@@ -449,7 +572,11 @@
               { "key": "Authorization", "value": "Bearer {{token}}" },
               { "key": "Content-Type", "value": "application/json" }
             ],
-            "url": { "raw": "{{base_url}}/reviews/{{review_id}}", "host": ["{{base_url}}"], "path": ["reviews", "{{review_id}}"] },
+            "url": {
+              "raw": "{{base_url}}/reviews/{{review_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["reviews", "{{review_id}}"]
+            },
             "body": {
               "mode": "raw",
               "raw": "{\n  \"rating\": 10.0,\n  \"content\": \"On rewatch — absolute 10/10. The ending hit different.\"\n}"
@@ -464,7 +591,11 @@
               { "key": "Authorization", "value": "Bearer {{token2}}" },
               { "key": "Content-Type", "value": "application/json" }
             ],
-            "url": { "raw": "{{base_url}}/reviews/{{review_id}}", "host": ["{{base_url}}"], "path": ["reviews", "{{review_id}}"] },
+            "url": {
+              "raw": "{{base_url}}/reviews/{{review_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["reviews", "{{review_id}}"]
+            },
             "body": {
               "mode": "raw",
               "raw": "{\n  \"rating\": 1.0\n}"
@@ -476,7 +607,11 @@
           "request": {
             "method": "DELETE",
             "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
-            "url": { "raw": "{{base_url}}/reviews/{{review_id}}", "host": ["{{base_url}}"], "path": ["reviews", "{{review_id}}"] }
+            "url": {
+              "raw": "{{base_url}}/reviews/{{review_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["reviews", "{{review_id}}"]
+            }
           }
         }
       ]
@@ -493,7 +628,10 @@
               "raw": "{{base_url}}/search?q=berserk&type=all",
               "host": ["{{base_url}}"],
               "path": ["search"],
-              "query": [{ "key": "q", "value": "berserk" }, { "key": "type", "value": "all" }]
+              "query": [
+                { "key": "q", "value": "berserk" },
+                { "key": "type", "value": "all" }
+              ]
             }
           }
         },
@@ -506,7 +644,10 @@
               "raw": "{{base_url}}/search?q=attack+on+titan&type=anime",
               "host": ["{{base_url}}"],
               "path": ["search"],
-              "query": [{ "key": "q", "value": "attack on titan" }, { "key": "type", "value": "anime" }]
+              "query": [
+                { "key": "q", "value": "attack on titan" },
+                { "key": "type", "value": "anime" }
+              ]
             }
           }
         },
@@ -519,7 +660,10 @@
               "raw": "{{base_url}}/search?q=ahmad&type=user",
               "host": ["{{base_url}}"],
               "path": ["search"],
-              "query": [{ "key": "q", "value": "ahmad" }, { "key": "type", "value": "user" }]
+              "query": [
+                { "key": "q", "value": "ahmad" },
+                { "key": "type", "value": "user" }
+              ]
             }
           }
         },
@@ -528,7 +672,11 @@
           "request": {
             "method": "GET",
             "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
-            "url": { "raw": "{{base_url}}/search", "host": ["{{base_url}}"], "path": ["search"] }
+            "url": {
+              "raw": "{{base_url}}/search",
+              "host": ["{{base_url}}"],
+              "path": ["search"]
+            }
           }
         },
         {
@@ -540,7 +688,10 @@
               "raw": "{{base_url}}/search/detail?id=5114&type=anime",
               "host": ["{{base_url}}"],
               "path": ["search", "detail"],
-              "query": [{ "key": "id", "value": "5114" }, { "key": "type", "value": "anime" }]
+              "query": [
+                { "key": "id", "value": "5114" },
+                { "key": "type", "value": "anime" }
+              ]
             }
           }
         },
@@ -553,7 +704,10 @@
               "raw": "{{base_url}}/search/detail?id=1877&type=game",
               "host": ["{{base_url}}"],
               "path": ["search", "detail"],
-              "query": [{ "key": "id", "value": "1877" }, { "key": "type", "value": "game" }]
+              "query": [
+                { "key": "id", "value": "1877" },
+                { "key": "type", "value": "game" }
+              ]
             }
           }
         }
@@ -566,28 +720,44 @@
           "name": "Media Detail — anime",
           "request": {
             "method": "GET",
-            "url": { "raw": "{{base_url}}/media/anime/5114", "host": ["{{base_url}}"], "path": ["media", "anime", "5114"] }
+            "url": {
+              "raw": "{{base_url}}/media/anime/5114",
+              "host": ["{{base_url}}"],
+              "path": ["media", "anime", "5114"]
+            }
           }
         },
         {
           "name": "Media Detail — manga",
           "request": {
             "method": "GET",
-            "url": { "raw": "{{base_url}}/media/manga/2", "host": ["{{base_url}}"], "path": ["media", "manga", "2"] }
+            "url": {
+              "raw": "{{base_url}}/media/manga/2",
+              "host": ["{{base_url}}"],
+              "path": ["media", "manga", "2"]
+            }
           }
         },
         {
           "name": "Media Detail — game",
           "request": {
             "method": "GET",
-            "url": { "raw": "{{base_url}}/media/game/1877", "host": ["{{base_url}}"], "path": ["media", "game", "1877"] }
+            "url": {
+              "raw": "{{base_url}}/media/game/1877",
+              "host": ["{{base_url}}"],
+              "path": ["media", "game", "1877"]
+            }
           }
         },
         {
           "name": "Media Detail — invalid type (400)",
           "request": {
             "method": "GET",
-            "url": { "raw": "{{base_url}}/media/movie/5114", "host": ["{{base_url}}"], "path": ["media", "movie", "5114"] }
+            "url": {
+              "raw": "{{base_url}}/media/movie/5114",
+              "host": ["{{base_url}}"],
+              "path": ["media", "movie", "5114"]
+            }
           }
         }
       ]
@@ -596,14 +766,18 @@
       "name": "🤖 AI (Protected)",
       "item": [
         {
-          "name": "Vibe Match",
+          "name": "Vibe Check",
           "request": {
             "method": "POST",
             "header": [
               { "key": "Authorization", "value": "Bearer {{token}}" },
               { "key": "Content-Type", "value": "application/json" }
             ],
-            "url": { "raw": "{{base_url}}/ai/vibe-match", "host": ["{{base_url}}"], "path": ["ai", "vibe-match"] },
+            "url": {
+              "raw": "{{base_url}}/ai/vibe-check",
+              "host": ["{{base_url}}"],
+              "path": ["ai", "vibe-check"]
+            },
             "body": {
               "mode": "raw",
               "raw": "{\n  \"referenceIds\": [{{collection_id}}],\n  \"targetMediaTypes\": [\"anime\", \"manga\", \"game\"],\n  \"excludeTitles\": [\"Fullmetal Alchemist: Brotherhood\"]\n}"
@@ -611,14 +785,18 @@
           }
         },
         {
-          "name": "Vibe Match — empty referenceIds (400)",
+          "name": "Vibe Check — empty referenceIds (400)",
           "request": {
             "method": "POST",
             "header": [
               { "key": "Authorization", "value": "Bearer {{token}}" },
               { "key": "Content-Type", "value": "application/json" }
             ],
-            "url": { "raw": "{{base_url}}/ai/vibe-match", "host": ["{{base_url}}"], "path": ["ai", "vibe-match"] },
+            "url": {
+              "raw": "{{base_url}}/ai/vibe-check",
+              "host": ["{{base_url}}"],
+              "path": ["ai", "vibe-check"]
+            },
             "body": {
               "mode": "raw",
               "raw": "{\n  \"referenceIds\": [],\n  \"targetMediaTypes\": [\"anime\"]\n}"
@@ -633,7 +811,11 @@
               { "key": "Authorization", "value": "Bearer {{token}}" },
               { "key": "Content-Type", "value": "application/json" }
             ],
-            "url": { "raw": "{{base_url}}/ai/title-match", "host": ["{{base_url}}"], "path": ["ai", "title-match"] },
+            "url": {
+              "raw": "{{base_url}}/ai/title-match",
+              "host": ["{{base_url}}"],
+              "path": ["ai", "title-match"]
+            },
             "body": {
               "mode": "raw",
               "raw": "{\n  \"collectionId\": {{collection_id}},\n  \"excludeTitles\": []\n}"
@@ -648,7 +830,11 @@
               { "key": "Authorization", "value": "Bearer {{token}}" },
               { "key": "Content-Type", "value": "application/json" }
             ],
-            "url": { "raw": "{{base_url}}/ai/title-match", "host": ["{{base_url}}"], "path": ["ai", "title-match"] },
+            "url": {
+              "raw": "{{base_url}}/ai/title-match",
+              "host": ["{{base_url}}"],
+              "path": ["ai", "title-match"]
+            },
             "body": {
               "mode": "raw",
               "raw": "{}"
@@ -663,7 +849,11 @@
               { "key": "Authorization", "value": "Bearer {{token}}" },
               { "key": "Content-Type", "value": "application/json" }
             ],
-            "url": { "raw": "{{base_url}}/ai/taste-dna", "host": ["{{base_url}}"], "path": ["ai", "taste-dna"] },
+            "url": {
+              "raw": "{{base_url}}/ai/taste-dna",
+              "host": ["{{base_url}}"],
+              "path": ["ai", "taste-dna"]
+            },
             "body": { "mode": "raw", "raw": "{}" }
           }
         },
@@ -675,7 +865,11 @@
               { "key": "Authorization", "value": "Bearer {{token2}}" },
               { "key": "Content-Type", "value": "application/json" }
             ],
-            "url": { "raw": "{{base_url}}/ai/taste-dna", "host": ["{{base_url}}"], "path": ["ai", "taste-dna"] },
+            "url": {
+              "raw": "{{base_url}}/ai/taste-dna",
+              "host": ["{{base_url}}"],
+              "path": ["ai", "taste-dna"]
+            },
             "body": { "mode": "raw", "raw": "{}" }
           }
         }

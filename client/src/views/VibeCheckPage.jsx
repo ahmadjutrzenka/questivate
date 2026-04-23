@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  fetchVibeMatch,
+  fetchVibeCheck,
   addExcluded,
   clearSession,
 } from "../features/recommendation/recommendationSlice";
@@ -10,10 +10,10 @@ import { addToCollection } from "../features/collection/collectionSlice";
 const MEDIA_TYPES = ["anime", "manga", "game"];
 const STATUSES = ["plan", "ongoing", "completed", "dropped"];
 
-export default function VibeMatchPage() {
+export default function VibeCheckPage() {
   const dispatch = useDispatch();
   const { items } = useSelector((s) => s.collection);
-  const { vibeResults, loading, error, excludedThisSession } = useSelector(
+  const { vibeCheckResults, loading, error, excludedThisSession } = useSelector(
     (s) => s.recommendation,
   );
 
@@ -68,11 +68,11 @@ export default function VibeMatchPage() {
       ...selected.game,
     ];
     const excludeTitles = Object.values(excludedThisSession).flat();
-    dispatch(fetchVibeMatch(referenceIds, targetTypes, excludeTitles));
+    dispatch(fetchVibeCheck(referenceIds, targetTypes, excludeTitles));
   };
 
   const handleSearchAgain = (type) => {
-    const currentTitles = (vibeResults[type] || []).map((r) => r.title);
+    const currentTitles = (vibeCheckResults[type] || []).map((r) => r.title);
     dispatch(addExcluded({ type, titles: currentTitles }));
     const referenceIds = [
       ...selected.anime,
@@ -83,7 +83,7 @@ export default function VibeMatchPage() {
       ...Object.values(excludedThisSession).flat(),
       ...currentTitles,
     ];
-    dispatch(fetchVibeMatch(referenceIds, targetTypes, excludeTitles));
+    dispatch(fetchVibeCheck(referenceIds, targetTypes, excludeTitles));
   };
 
   const handleNewSearch = () => {
@@ -111,7 +111,7 @@ export default function VibeMatchPage() {
     setAddModal(null);
   };
 
-  const hasResults = MEDIA_TYPES.some((t) => vibeResults[t]?.length > 0);
+  const hasResults = MEDIA_TYPES.some((t) => vibeCheckResults[t]?.length > 0);
 
   return (
     <div className="vibe-page">
@@ -359,7 +359,7 @@ export default function VibeMatchPage() {
           {!loading &&
             hasResults &&
             targetTypes.map((type) => {
-              const list = vibeResults[type] || [];
+              const list = vibeCheckResults[type] || [];
               if (list.length === 0) return null;
               return (
                 <section key={type} className="rec-section">

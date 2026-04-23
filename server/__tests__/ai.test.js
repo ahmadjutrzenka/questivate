@@ -160,11 +160,11 @@ describe("POST /ai/taste-dna", () => {
   });
 });
 
-// ─── POST /ai/vibe-match ───────────────────────────────────────────────────
-describe("POST /ai/vibe-match", () => {
-  it("200 — vibe match berhasil", async () => {
+// ─── POST /ai/vibe-check ───────────────────────────────────────────────────
+describe("POST /ai/vibe-check", () => {
+  it("200 — vibe check berhasil", async () => {
     const res = await request(app)
-      .post("/ai/vibe-match")
+      .post("/ai/vibe-check")
       .set("Authorization", `Bearer ${token}`)
       .send({
         referenceIds: [col1.id, col2.id],
@@ -177,7 +177,7 @@ describe("POST /ai/vibe-match", () => {
 
   it("400 — referenceIds kosong", async () => {
     const res = await request(app)
-      .post("/ai/vibe-match")
+      .post("/ai/vibe-check")
       .set("Authorization", `Bearer ${token}`)
       .send({ referenceIds: [], targetMediaTypes: ["anime"] });
     expect(res.status).toBe(400);
@@ -185,7 +185,7 @@ describe("POST /ai/vibe-match", () => {
 
   it("400 — targetMediaTypes tidak dikirim", async () => {
     const res = await request(app)
-      .post("/ai/vibe-match")
+      .post("/ai/vibe-check")
       .set("Authorization", `Bearer ${token}`)
       .send({ referenceIds: [col1.id] });
     expect(res.status).toBe(400);
@@ -193,13 +193,13 @@ describe("POST /ai/vibe-match", () => {
 
   it("404 — referenceIds tidak ditemukan di koleksi user", async () => {
     const res = await request(app)
-      .post("/ai/vibe-match")
+      .post("/ai/vibe-check")
       .set("Authorization", `Bearer ${token}`)
       .send({ referenceIds: [99999], targetMediaTypes: ["anime"] });
     expect(res.status).toBe(404);
   });
 
-  it("200 — vibe match tetap berhasil saat metadata koleksi minim (uji fallback prompt)", async () => {
+  it("200 — vibe check tetap berhasil saat metadata koleksi minim (uji fallback prompt)", async () => {
     const sparse = await Collection.create({
       userId: user.id,
       mediaType: "game",
@@ -212,7 +212,7 @@ describe("POST /ai/vibe-match", () => {
     });
 
     const res = await request(app)
-      .post("/ai/vibe-match")
+      .post("/ai/vibe-check")
       .set("Authorization", `Bearer ${token}`)
       .send({
         referenceIds: [sparse.id],

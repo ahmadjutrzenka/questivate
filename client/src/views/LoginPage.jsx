@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router";
 import { GoogleLogin } from "@react-oauth/google";
@@ -16,11 +16,16 @@ export default function LoginPage() {
     if (localStorage.getItem("access_token")) navigate("/");
   };
 
+  useEffect(() => {
+    if (error) {
+      toast.error(error);
+    }
+  }, [error]);
+
   return (
     <div className="auth-page">
       <div className="auth-card">
         <h1 className="auth-title">Login</h1>
-        {error && <p className="auth-error">{error}</p>}
         <form onSubmit={handleSubmit} className="auth-form">
           <input
             type="email"

@@ -39,7 +39,7 @@ Keys not requested → empty array [].`;
 }
 
 class AIController {
-  static async vibeMatch(req, res, next) {
+  static async vibeCheck(req, res, next) {
     try {
       const { referenceIds, targetMediaTypes, excludeTitles = [] } = req.body;
 
@@ -75,7 +75,11 @@ class AIController {
         };
       }
 
-      const prompt = buildVibePrompt(references, targetMediaTypes, excludeTitles);
+      const prompt = buildVibePrompt(
+        references,
+        targetMediaTypes,
+        excludeTitles,
+      );
       const text = await generateContent(prompt);
 
       const parsed = parseGeminiJSON(text);

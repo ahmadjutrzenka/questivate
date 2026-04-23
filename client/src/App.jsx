@@ -7,7 +7,7 @@ import OAuthCallback from "./views/OAuthCallback";
 import DashboardPage from "./views/DashboardPage";
 import CollectionsPage from "./views/CollectionsPage";
 import SearchPage from "./views/SearchPage";
-import VibeMatchPage from "./views/VibeMatchPage";
+import VibeCheckPage from "./views/VibeCheckPage";
 import TitleMatchPage from "./views/TitleMatchPage";
 import MediaDetailPage from "./views/MediaDetailPage";
 import UserProfilePage from "./views/UserProfilePage";
@@ -27,7 +27,7 @@ function App() {
         <Route path="/" element={<DashboardPage />} />
         <Route path="/collections" element={<CollectionsPage />} />
         <Route path="/search" element={<SearchPage />} />
-        <Route path="/vibe-match" element={<VibeMatchPage />} />
+        <Route path="/vibe-check" element={<VibeCheckPage />} />
         <Route path="/title-match/:id" element={<TitleMatchPage />} />
         <Route path="/media/:type/:externalId" element={<MediaDetailPage />} />
         <Route path="/users/:username" element={<UserProfilePage />} />

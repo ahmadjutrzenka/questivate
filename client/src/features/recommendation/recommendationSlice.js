@@ -15,7 +15,7 @@ const normalizeMediaMap = (payload) => ({
 });
 
 const initialState = {
-  vibeResults: createEmptyMediaMap(),
+  vibeCheckResults: createEmptyMediaMap(),
   titleResults: createEmptyMediaMap(),
   excludedThisSession: createEmptyMediaMap(),
   loading: false,
@@ -30,9 +30,9 @@ const recommendationSlice = createSlice({
       state.loading = true;
       state.error = "";
     },
-    vibeMatchSuccess: (state, action) => {
+    vibeCheckSuccess: (state, action) => {
       state.loading = false;
-      state.vibeResults = normalizeMediaMap(action.payload);
+      state.vibeCheckResults = normalizeMediaMap(action.payload);
     },
     titleMatchSuccess: (state, action) => {
       state.loading = false;
@@ -50,7 +50,7 @@ const recommendationSlice = createSlice({
       state.excludedThisSession[type] = [...new Set(merged.filter(Boolean))];
     },
     clearSession: (state) => {
-      state.vibeResults = createEmptyMediaMap();
+      state.vibeCheckResults = createEmptyMediaMap();
       state.titleResults = createEmptyMediaMap();
       state.excludedThisSession = createEmptyMediaMap();
       state.loading = false;
@@ -61,7 +61,7 @@ const recommendationSlice = createSlice({
 
 export const {
   recommendationPending,
-  vibeMatchSuccess,
+  vibeCheckSuccess,
   titleMatchSuccess,
   recommendationFailed,
   addExcluded,
@@ -72,21 +72,21 @@ const getHeaders = () => ({
   Authorization: `Bearer ${localStorage.getItem("access_token")}`,
 });
 
-export const fetchVibeMatch =
+export const fetchVibeCheck =
   (referenceIds, targetMediaTypes, excludeTitles = []) =>
   async (dispatch) => {
     try {
       dispatch(recommendationPending());
       const { data } = await axios.post(
-        `${BASE_URL}/ai/vibe-match`,
+        `${BASE_URL}/ai/vibe-check`,
         { referenceIds, targetMediaTypes, excludeTitles },
         { headers: getHeaders() },
       );
-      dispatch(vibeMatchSuccess(data));
+      dispatch(vibeCheckSuccess(data));
     } catch (error) {
       dispatch(
         recommendationFailed(
-          error.response?.data?.message || "Failed to fetch vibe match",
+          error.response?.data?.message || "Failed to fetch vibe check",
         ),
       );
     }

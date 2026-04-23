@@ -646,7 +646,7 @@ Get full detail of a single title from Jikan or IGDB. Used for the preview popup
 
 All AI endpoints require authentication. Response time may take 10–30 seconds due to Gemini + sequential cover fetching.
 
-#### `POST /ai/vibe-match`
+#### `POST /ai/vibe-check`
 
 Analyze multiple titles from the user's collection and recommend new titles based on the dominant vibe.
 
@@ -697,7 +697,7 @@ Find similar titles across all three media based on a single title from the coll
 }
 ```
 
-**Response `200`:** Same shape as `/ai/vibe-match`, always returns `anime`, `manga`, and `game` keys.
+**Response `200`:** Same shape as `/ai/vibe-check`, always returns `anime`, `manga`, and `game` keys.
 
 **Response `400`:** `collectionId is required`
 
