@@ -2,73 +2,108 @@
 
 # Individual Project Phase 2
 
-# Questivate API
+# Questivate — Server
 
-A cross-media logging and AI recommendation server for anime, manga, and games. Users can build their collection, write reviews, and get AI-powered recommendations based on their taste.
-
-**Live URL:** `http://your-ec2-ip:3000`
+REST API for Questivate, a cross-media tracking app for anime, manga, and games. Built with Express.js + PostgreSQL + Sequelize.
 
 ---
 
 ## Tech Stack
 
-- **Runtime:** Node.js + Express.js v5
-- **Database:** PostgreSQL + Sequelize ORM
-- **Authentication:** JWT + bcryptjs (manual) · Google OAuth via `google-auth-library`
-- **AI:** Google Gemini (`@google/genai`)
-- **External APIs:** Jikan v4 (anime & manga) · IGDB via Twitch (games)
-- **Image Storage:** Cloudinary (avatar upload)
-- **Testing:** Jest + Supertest — **~97% line coverage**
+| Layer         | Library                                  |
+| ------------- | ---------------------------------------- |
+| Runtime       | Node.js                                  |
+| Framework     | Express 5                                |
+| ORM           | Sequelize 6 + pg                         |
+| Auth          | JWT (jsonwebtoken) + bcryptjs            |
+| Google OAuth  | google-auth-library (`verifyIdToken`)    |
+| File Upload   | Multer (memory storage) → Cloudinary     |
+| AI            | @google/generative-ai (Gemini 2.0 Flash) |
+| External APIs | Jikan v4 (anime/manga), IGDB (games)     |
+| Testing       | Jest + Supertest                         |
 
 ---
 
-## Local Setup
+## Setup
 
 ```bash
-# 1. Clone and install
-git clone https://github.com/ahmadjutrzenka/ip-ahmadjutrzenka-questivate.git
-cd ip-ahmadjutrzenka-questivate
+cd server
 npm install
-
-# 2. Create PostgreSQL databases
-createdb questivate
-createdb questivate_test
-
-# 3. Copy and fill environment variables
-cp .env-example .env
-# → fill in all values (see Environment Variables section)
-
-# 4. Run migrations
-npx sequelize-cli db:migrate
-
-# 5. Start server
-node bin/www.js
-# Server runs on http://localhost:3000
-
-# 6. Run tests
-NODE_ENV=test npx sequelize-cli db:migrate
-npm test
 ```
+
+Create a `.env` file (see [Environment Variables](#environment-variables)), then run migrations and seeders:
+
+```bash
+npx sequelize-cli db:create
+npx sequelize-cli db:migrate
+npx sequelize-cli db:seed:all   # optional
+```
+
+Start the server:
+
+```bash
+node bin/www.js
+# or with nodemon:
+npx nodemon bin/www.js
+```
+
+Default port: **3000**
 
 ---
 
 ## Environment Variables
 
 ```env
-JWT_SECRET_KEY=
-GOOGLE_CLIENT_ID=
+PORT=3000
+DB_USERNAME=postgres
+DB_PASSWORD=yourpassword
+DB_NAME=questivate_db
+DB_HOST=localhost
 
-IGDB_CLIENT_ID=
-IGDB_CLIENT_SECRET=
+JWT_SECRET=your_jwt_secret
 
-GEMINI_API_KEY=
+GOOGLE_CLIENT_ID=your_google_client_id
 
-CLOUDINARY_CLOUD_NAME=
-CLOUDINARY_API_KEY=
-CLOUDINARY_API_SECRET=
+CLOUDINARY_CLOUD_NAME=your_cloud_name
+CLOUDINARY_API_KEY=your_api_key
+CLOUDINARY_API_SECRET=your_api_secret
 
-CLIENT_URL=http://localhost:5173
+IGDB_CLIENT_ID=your_igdb_client_id
+IGDB_CLIENT_SECRET=your_igdb_client_secret
+
+GEMINI_API_KEY=your_gemini_api_key
 ```
+
+---
+
+## Database Models
+
+| Model      | Key Fields                                                                                      |
+| ---------- | ----------------------------------------------------------------------------------------------- |
+| User       | id, username, email, password (hashed), avatar, bio, loginMethod                                |
+| Collection | id, userId, mediaType, externalId, title, coverUrl, genres, synopsis, score, status, isFavorite |
+| Review     | id, userId, collectionId, rating, content                                                       |
+| TasteDNA   | id, userId, content, generatedAt                                                                |
+
+---
+
+## Error Response Format
+
+All errors follow this shape:
+
+```json
+{
+  "message": "Error description"
+}
+```
+
+| Status | Name trigger         |
+| ------ | -------------------- |
+| 400    | `BadRequest`         |
+| 401    | `Unauthorized`       |
+| 403    | `Forbidden`          |
+| 404    | `NotFound`           |
+| 500    | unhandled / internal |
 
 ---
 
@@ -80,29 +115,27 @@ Protected endpoints require a Bearer token in the `Authorization` header:
 Authorization: Bearer <access_token>
 ```
 
-Google login sends the Google ID token in a **request header** (not body):
-
-```
-access_token_google: <google_id_token>
-```
+The token is issued on login and contains `{ id, email }`.
 
 ---
 
 ## Endpoints
 
-### Auth
+### Auth — `/auth`
 
-#### `POST /auth/register`
+#### POST `/auth/register`
 
 Register a new local account.
+
+**Auth:** none
 
 **Request body:**
 
 ```json
 {
-  "username": "string",
-  "email": "string",
-  "password": "string (min 6 chars)"
+  "username": "john",
+  "email": "john@example.com",
+  "password": "secret123"
 }
 ```
 
@@ -111,70 +144,82 @@ Register a new local account.
 ```json
 {
   "id": 1,
-  "username": "ahmadjutrzenka",
-  "email": "ahmad@mail.com",
+  "username": "john",
+  "email": "john@example.com",
   "loginMethod": "local"
 }
 ```
 
-**Response `400`:**
+**Errors:**
 
-```json
-{
-  "message": "Email already registered via Google. Please sign in with Google."
-}
-```
+- `400` — email already registered via Google
 
 ---
 
-#### `POST /auth/login`
+#### POST `/auth/login`
 
 Login with email and password.
+
+**Auth:** none
 
 **Request body:**
 
 ```json
 {
-  "email": "string",
-  "password": "string"
+  "email": "john@example.com",
+  "password": "secret123"
 }
 ```
 
 **Response `200`:**
 
 ```json
-{ "access_token": "eyJhbGci..." }
+{
+  "access_token": "<jwt>"
+}
 ```
 
-**Response `400`:** `Email is required` / `Password is required`
+**Errors:**
 
-**Response `401`:** `Invalid email or password` / `This account uses Google sign-in. Please sign in with Google.`
+- `400` — email or password missing
+- `401` — invalid credentials, or account uses Google sign-in
 
 ---
 
-#### `POST /auth/google-login`
+#### POST `/auth/google-login`
 
-Login or register with Google. Sends the Google ID token as a **header**.
+Login or register via Google OAuth.
+
+**Auth:** none
 
 **Request header:**
 
 ```
-access_token_google: <google_id_token_from_frontend>
+access_token_google: <google_id_token>
 ```
 
 **Response `200`:**
 
 ```json
-{ "access_token": "eyJhbGci..." }
+{
+  "access_token": "<jwt>",
+  "isNewUser": true
+}
 ```
 
-**Response `400`:** `Google token is required` / `Google email is not verified` / `Email already registered manually. Please sign in with email and password.`
+`isNewUser: true` when the account was just created (use this to redirect to onboarding).
+
+**Errors:**
+
+- `400` — token missing or Google email not verified
 
 ---
 
-#### `GET /auth/profile` 🔒
+#### GET `/auth/profile`
 
-Get the authenticated user's own profile including Taste DNA.
+Get the authenticated user's profile including their TasteDNA.
+
+**Auth:** required
 
 **Response `200`:**
 
@@ -182,78 +227,104 @@ Get the authenticated user's own profile including Taste DNA.
 {
   "user": {
     "id": 1,
-    "username": "ahmadjutrzenka",
-    "email": "ahmad@mail.com",
+    "username": "john",
+    "email": "john@example.com",
+    "avatar": "https://res.cloudinary.com/...",
+    "bio": "Loves dark fantasy and tactical RPGs.",
     "loginMethod": "local",
-    "avatar": "https://res.cloudinary.com/your_cloud/image/upload/questivate/avatars/user_1.jpg",
-    "bio": "I love dark fantasy",
     "TasteDNA": {
-      "content": "Your taste gravitates toward...",
-      "generatedAt": "2026-04-22T10:00:00.000Z"
+      "content": "John gravitates toward...",
+      "generatedAt": "2026-04-24T10:00:00.000Z"
     }
   }
 }
 ```
 
+`TasteDNA` is `null` if not yet generated.
+
 ---
 
-#### `PATCH /auth/profile` 🔒
+#### PATCH `/auth/profile`
 
-Update bio.
+Update the authenticated user's bio.
+
+**Auth:** required
 
 **Request body:**
 
 ```json
-{ "bio": "string" }
+{
+  "bio": "Loves dark fantasy."
+}
 ```
 
 **Response `200`:**
 
 ```json
-{ "message": "Profile updated successfully", "bio": "Updated bio text" }
+{
+  "message": "Profile updated successfully",
+  "bio": "Loves dark fantasy."
+}
 ```
 
 ---
 
-#### `PATCH /auth/profile/avatar` 🔒
+#### PATCH `/auth/profile/avatar`
 
-Upload profile avatar to Cloudinary.
+Upload a new avatar image. Uploaded to Cloudinary, overwriting the previous one.
 
-**Request:** `Content-Type: multipart/form-data`, field name: `avatar`
+**Auth:** required
+
+**Content-Type:** `multipart/form-data`
+
+**Form field:** `avatar` (image file)
 
 **Response `200`:**
 
 ```json
 {
   "message": "Avatar updated successfully",
-  "avatar": "https://res.cloudinary.com/your_cloud/image/upload/questivate/avatars/user_1.jpg"
+  "avatar": "https://res.cloudinary.com/..."
 }
 ```
 
+**Errors:**
+
+- `400` — no file attached
+
 ---
 
-### Users (Public)
+### Users — `/users`
 
-#### `GET /users`
+#### GET `/users`
 
-Search users by username.
+List users, optionally filtered by username.
+
+**Auth:** none
 
 **Query params:**
-| Param | Type | Description |
-|---|---|---|
-| `q` | string | Optional. Partial username search (case-insensitive) |
+
+| Param | Type   | Description                                |
+| ----- | ------ | ------------------------------------------ |
+| `q`   | string | Partial username search (case-insensitive) |
 
 **Response `200`:**
 
 ```json
-[{ "id": 1, "username": "ahmadjutrzenka", "avatar": "https://..." }]
+{
+  "users": [{ "id": 1, "username": "john", "avatar": "https://..." }]
+}
 ```
+
+Max 20 results.
 
 ---
 
-#### `GET /users/:username`
+#### GET `/users/:username`
 
-Get a user's full public profile.
+Get a user's public profile: info, stats, favorites, TasteDNA, and full collection.
+
+**Auth:** none
 
 **Response `200`:**
 
@@ -261,45 +332,76 @@ Get a user's full public profile.
 {
   "user": {
     "id": 1,
-    "username": "ahmadjutrzenka",
+    "username": "john",
     "avatar": "https://...",
-    "bio": "I love dark fantasy",
+    "bio": "Loves dark fantasy.",
     "joinedSince": "2026-04-21T00:00:00.000Z"
   },
-  "stats": { "anime": 14, "manga": 9, "game": 7 },
+  "stats": {
+    "anime": 12,
+    "manga": 5,
+    "game": 8
+  },
   "favorites": [
-    { "id": 3, "title": "Berserk", "coverUrl": "https://...", "mediaType": "manga", "externalId": "2" }
+    {
+      "id": 3,
+      "title": "Berserk",
+      "coverUrl": "https://...",
+      "mediaType": "manga",
+      "externalId": "2",
+      "isFavorite": true
+    }
   ],
   "tasteDNA": {
-    "content": "Your taste gravitates toward...",
-    "generatedAt": "2026-04-22T10:00:00.000Z"
+    "content": "John gravitates toward...",
+    "generatedAt": "2026-04-24T10:00:00.000Z"
   },
-  "collections": [...]
+  "collections": [
+    {
+      "id": 3,
+      "title": "Berserk",
+      "mediaType": "manga",
+      "status": "ongoing",
+      "Review": {
+        "id": 1,
+        "rating": 9.5,
+        "content": "...",
+        "createdAt": "...",
+        "updatedAt": "..."
+      }
+    }
+  ]
 }
 ```
 
-**Response `404`:** `User not found`
+`favorites` max 5. `tasteDNA` is `null` if not generated. `Review` inside each collection item is `null` if no review exists.
+
+**Errors:**
+
+- `404` — username not found
 
 ---
 
-### Reviews (Public read, Protected write)
+### Reviews — `/reviews`
 
-#### `GET /reviews/recent`
+#### GET `/reviews/recent`
 
-Get 20 most recently updated reviews across all users. Sorted by `updatedAt DESC`. Includes `isEdited` flag.
+Get the 20 most recently updated reviews across all users, with author and collection info.
 
-**Response `200`:**
+**Auth:** none
+
+**Response `200`:** Array of review objects.
 
 ```json
 [
   {
     "id": 1,
     "rating": 9.5,
-    "content": "Masterpiece.",
-    "createdAt": "2026-04-22T08:00:00.000Z",
-    "updatedAt": "2026-04-22T10:00:00.000Z",
-    "isEdited": true,
-    "User": { "id": 1, "username": "ahmadjutrzenka", "avatar": "https://..." },
+    "content": "A masterpiece.",
+    "isEdited": false,
+    "createdAt": "2026-04-24T09:00:00.000Z",
+    "updatedAt": "2026-04-24T09:00:00.000Z",
+    "User": { "id": 1, "username": "john", "avatar": "https://..." },
     "Collection": {
       "id": 3,
       "title": "Berserk",
@@ -311,21 +413,29 @@ Get 20 most recently updated reviews across all users. Sorted by `updatedAt DESC
 ]
 ```
 
+`isEdited` is `true` when `updatedAt > createdAt`.
+
 ---
 
-#### `GET /reviews/:id`
+#### GET `/reviews/:id`
 
 Get a single review by ID.
 
-**Response `200`:** Same shape as one item from `/reviews/recent`
+**Auth:** none
 
-**Response `404`:** `Review not found`
+**Response `200`:** Same shape as a single item from `GET /reviews/recent`.
+
+**Errors:**
+
+- `404` — review not found
 
 ---
 
-#### `POST /reviews` 🔒
+#### POST `/reviews`
 
-Create a review for a collection item. The collection item must belong to the authenticated user. One review per collection item.
+Create a review for an item in the authenticated user's collection.
+
+**Auth:** required
 
 **Request body:**
 
@@ -333,64 +443,51 @@ Create a review for a collection item. The collection item must belong to the au
 {
   "collectionId": 3,
   "rating": 9.5,
-  "content": "A brutal, beautiful masterpiece."
+  "content": "A masterpiece."
 }
 ```
 
-> At least one of `rating` or `content` must be provided.
+Both `rating` and `content` are optional, but at least one must be provided.
 
-**Response `201`:**
+**Response `201`:** The created review object.
 
-```json
-{
-  "id": 1,
-  "userId": 1,
-  "collectionId": 3,
-  "rating": 9.5,
-  "content": "A brutal, beautiful masterpiece.",
-  "createdAt": "...",
-  "updatedAt": "..."
-}
-```
+**Errors:**
 
-**Response `400`:** `Rating or review content is required` / duplicate review (unique constraint)
-
-**Response `403`:** `You can only review your own collection items`
-
-**Response `404`:** `Collection item not found`
+- `400` — both rating and content are missing
+- `403` — the collection item doesn't belong to the authenticated user
+- `404` — collection item not found
 
 ---
 
-#### `PATCH /reviews/:id` 🔒 (owner only)
+#### PATCH `/reviews/:id`
 
-Update a review. `updatedAt` changes automatically, which triggers `isEdited: true` in responses if updated more than 60 seconds after creation.
+Update a review. Only the review owner can edit.
+
+**Auth:** required
 
 **Request body:**
 
 ```json
 {
   "rating": 10,
-  "content": "Edited: even better on reread."
+  "content": "Changed my mind — perfect."
 }
 ```
 
-**Response `200`:**
+**Response `200`:** The updated review object with `isEdited` flag.
 
-```json
-{
-  "id": 1,
-  "rating": 10,
-  "content": "Edited: even better on reread.",
-  "isEdited": true,
-  "updatedAt": "..."
-}
-```
+**Errors:**
 
-**Response `403`:** `You are not authorized`
+- `403` — not the owner
+- `404` — review not found
 
 ---
 
-#### `DELETE /reviews/:id` 🔒 (owner only)
+#### DELETE `/reviews/:id`
+
+Delete a review. Only the review owner can delete.
+
+**Auth:** required
 
 **Response `200`:**
 
@@ -398,66 +495,71 @@ Update a review. `updatedAt` changes automatically, which triggers `isEdited: tr
 { "message": "Review deleted successfully" }
 ```
 
-**Response `403`:** `You are not authorized`
+**Errors:**
 
-**Response `404`:** `Review not found`
+- `403` — not the owner
+- `404` — review not found
 
 ---
 
-### Media (Public)
+### Media — `/media`
 
-#### `GET /media/:type/:externalId`
+#### GET `/media/:type/:externalId`
 
-Get media info from external API (Jikan or IGDB) plus all Questivate user reviews for that media.
+Get full media details from external API (Jikan for anime/manga, IGDB for games), plus all Questivate user reviews for that title.
 
-**Params:**
-| Param | Values |
-|---|---|
-| `type` | `anime` \| `manga` \| `game` |
-| `externalId` | MAL ID (for anime/manga) or IGDB ID (for game) |
+**Auth:** none
+
+**Path params:**
+
+| Param        | Values                                 |
+| ------------ | -------------------------------------- |
+| `type`       | `anime`, `manga`, `game`               |
+| `externalId` | MAL ID (anime/manga) or IGDB ID (game) |
 
 **Response `200`:**
 
 ```json
 {
   "mediaInfo": {
-    "mal_id": 2,
-    "title": "Berserk",
-    "images": { "jpg": { "image_url": "https://..." } },
-    "score": 8.72,
-    "genres": [{ "name": "Action" }, { "name": "Fantasy" }],
-    "synopsis": "..."
+    /* raw Jikan or IGDB response object */
   },
   "reviews": [
     {
       "id": 1,
       "rating": 9.5,
-      "content": "Masterpiece.",
+      "content": "...",
       "isEdited": false,
-      "User": { "id": 1, "username": "ahmadjutrzenka", "avatar": "https://..." }
+      "User": { "id": 1, "username": "john", "avatar": "https://..." }
     }
   ]
 }
 ```
 
-**Response `400`:** `Type must be anime, manga, or game`
+`mediaInfo` shape differs by type — Jikan fields for anime/manga, IGDB fields for game.
 
-**Response `404`:** `anime not found` / `manga not found` / `game not found`
+**Errors:**
+
+- `400` — invalid type
+- `404` — media not found on external API
 
 ---
 
-### Collections 🔒
+### Collections — `/collections`
 
 All collection endpoints require authentication.
 
-#### `GET /collections`
+#### GET `/collections`
 
-Get authenticated user's own collection.
+Get all collection items for the authenticated user.
+
+**Auth:** required
 
 **Query params:**
-| Param | Values | Description |
-|---|---|---|
-| `type` | `anime` \| `manga` \| `game` | Optional filter |
+
+| Param  | Values                   | Description          |
+| ------ | ------------------------ | -------------------- |
+| `type` | `anime`, `manga`, `game` | Filter by media type |
 
 **Response `200`:**
 
@@ -466,28 +568,40 @@ Get authenticated user's own collection.
   "collections": [
     {
       "id": 3,
-      "userId": 1,
       "mediaType": "manga",
       "externalId": "2",
       "title": "Berserk",
       "coverUrl": "https://...",
-      "genres": ["Action", "Fantasy"],
+      "genres": ["Action", "Drama"],
       "synopsis": "...",
-      "score": 8.72,
-      "status": "completed",
+      "score": 9.2,
+      "status": "ongoing",
       "isFavorite": true,
-      "createdAt": "...",
-      "updatedAt": "..."
+      "Review": {
+        "id": 1,
+        "rating": 9.5,
+        "content": "...",
+        "createdAt": "...",
+        "updatedAt": "..."
+      }
     }
   ]
 }
 ```
 
+Ordered by `createdAt DESC`. `Review` is `null` if no review exists.
+
+**Errors:**
+
+- `400` — invalid type value
+
 ---
 
-#### `POST /collections`
+#### POST `/collections`
 
-Add a title to the authenticated user's collection. A title with the same `externalId` and `mediaType` cannot be added twice by the same user.
+Add a media item to the authenticated user's collection.
+
+**Auth:** required
 
 **Request body:**
 
@@ -497,59 +611,94 @@ Add a title to the authenticated user's collection. A title with the same `exter
   "externalId": "2",
   "title": "Berserk",
   "coverUrl": "https://...",
-  "genres": ["Action", "Fantasy"],
-  "synopsis": "In a dark fantasy world...",
-  "score": 8.72,
-  "status": "completed"
+  "genres": ["Action", "Drama"],
+  "synopsis": "...",
+  "score": 9.2,
+  "status": "plan"
 }
 ```
 
-> `status` is required. Values: `plan` · `ongoing` · `completed` · `dropped`
+`status` values: `plan`, `ongoing`, `completed`, `dropped`
 
 **Response `201`:**
 
 ```json
-{ "collection": { ... } }
+{
+  "collection": {
+    /* created collection object */
+  }
+}
 ```
 
-**Response `400`:** `Berserk is already in your collection`
+**Errors:**
+
+- `400` — invalid mediaType, or title already in collection
 
 ---
 
-#### `GET /collections/:id` 🔒 (owner only)
+#### GET `/collections/:id`
 
-**Response `200`:** `{ "collection": { ... } }`
+Get a single collection item by ID. Only the owner can access.
 
-**Response `403`:** `You are not authorized`
+**Auth:** required + ownership check
 
-**Response `404`:** `Collection not found`
+**Response `200`:**
+
+```json
+{
+  "collection": {
+    /* collection object */
+  }
+}
+```
+
+**Errors:**
+
+- `403` — not the owner
+- `404` — not found
 
 ---
 
-#### `PATCH /collections/:id` 🔒 (owner only)
+#### PATCH `/collections/:id`
 
-Update `status` and/or `isFavorite`. Maximum 5 favorites per user.
+Update status or favorite flag of a collection item. Only the owner can edit.
+
+**Auth:** required + ownership check
 
 **Request body:**
 
 ```json
 {
-  "status": "ongoing",
+  "status": "completed",
   "isFavorite": true
 }
 ```
 
-**Response `200`:** `{ "collection": { ... } }`
+Both fields are optional. Favorites are capped at 5 per user.
 
-**Response `400`:** `You can only have up to 5 favorite items`
+**Response `200`:**
 
-**Response `403`:** `You are not authorized`
+```json
+{
+  "collection": {
+    /* updated collection object */
+  }
+}
+```
+
+**Errors:**
+
+- `400` — already have 5 favorites
+- `403` — not the owner
+- `404` — not found
 
 ---
 
-#### `DELETE /collections/:id` 🔒 (owner only)
+#### DELETE `/collections/:id`
 
-Deletes the collection item and its associated review (CASCADE).
+Remove an item from the authenticated user's collection. Only the owner can delete.
+
+**Auth:** required + ownership check
 
 **Response `200`:**
 
@@ -557,19 +706,22 @@ Deletes the collection item and its associated review (CASCADE).
 { "message": "Collection 3 has been deleted" }
 ```
 
+**Errors:**
+
+- `403` — not the owner
+- `404` — not found
+
 ---
 
-### Search 🔒
+### Search — `/search`
 
-#### `GET /search`
+All search endpoints require authentication.
 
-Search across anime, manga, game, and users. All external API calls are sequential to respect Jikan's rate limit.
+#### GET `/search/popular`
 
-**Query params:**
-| Param | Required | Values | Description |
-|---|---|---|---|
-| `q` | Yes | string | Search query |
-| `type` | No | `all` \| `anime` \| `manga` \| `game` \| `user` | Default: `all` |
+Get top 3 popular titles per media type from external APIs.
+
+**Auth:** required
 
 **Response `200`:**
 
@@ -577,90 +729,124 @@ Search across anime, manga, game, and users. All external API calls are sequenti
 {
   "anime": [
     {
-      "externalId": "1535",
-      "title": "Death Note",
+      "externalId": "5114",
+      "title": "Fullmetal Alchemist: Brotherhood",
       "coverUrl": "https://...",
-      "score": 8.62,
-      "genres": ["Mystery", "Psychological"],
+      "score": 9.1,
+      "genres": ["Action", "Adventure"],
       "synopsis": "...",
       "mediaType": "anime"
     }
   ],
-  "manga": [...],
-  "game": [...],
-  "users": [
-    { "id": 1, "username": "ahmadjutrzenka", "avatar": "https://..." }
+  "manga": [
+    /* same shape */
+  ],
+  "game": [
+    /* same shape */
   ]
 }
 ```
 
-**Response `400`:** `Query parameter 'q' is required` / `Type must be all, anime, manga, game, or user`
-
 ---
 
-#### `GET /search/detail`
+#### GET `/search`
 
-Get full detail of a single title from Jikan or IGDB. Used for the preview popup before adding to collection.
+Unified search across anime, manga, games, and users.
+
+**Auth:** required
 
 **Query params:**
-| Param | Required | Values |
-|---|---|---|
-| `id` | Yes | MAL ID or IGDB ID |
-| `type` | Yes | `anime` \| `manga` \| `game` |
 
-**Response `200` (anime/manga):**
+| Param  | Values                                  | Description                                |
+| ------ | --------------------------------------- | ------------------------------------------ |
+| `q`    | string                                  | Search query. Required unless `type=user`. |
+| `type` | `all`, `anime`, `manga`, `game`, `user` | Default: `all`                             |
+
+**Response `200`:**
 
 ```json
 {
-  "externalId": "1535",
-  "title": "Death Note",
+  "anime": [
+    /* media result objects */
+  ],
+  "manga": [
+    /* media result objects */
+  ],
+  "game": [
+    /* media result objects */
+  ],
+  "users": [{ "id": 1, "username": "john", "avatar": "https://..." }]
+}
+```
+
+When `type` is a specific media type, only that key is populated. Searching `type=user` with no `q` returns all users.
+
+**Errors:**
+
+- `400` — `q` missing (when type is not `user`), or invalid type
+
+---
+
+#### GET `/search/detail`
+
+Get normalized detail for a single media item from external APIs.
+
+**Auth:** required
+
+**Query params:**
+
+| Param  | Values                   |
+| ------ | ------------------------ |
+| `id`   | MAL ID or IGDB ID        |
+| `type` | `anime`, `manga`, `game` |
+
+**Response `200`:**
+
+```json
+{
+  "externalId": "5114",
+  "title": "Fullmetal Alchemist: Brotherhood",
   "coverUrl": "https://...",
-  "score": 8.62,
-  "genres": ["Mystery", "Psychological"],
+  "score": 9.1,
+  "genres": ["Action"],
   "synopsis": "...",
   "status": "Finished Airing",
   "mediaType": "anime",
-  "episodes": 37,
+  "episodes": 64,
   "chapters": null
 }
 ```
 
-**Response `200` (game):**
+Game response additionally includes `developers: [...]`. Anime includes `episodes`, manga includes `chapters`.
 
-```json
-{
-  "externalId": "1942",
-  "title": "Grand Theft Auto V",
-  "coverUrl": "https://images.igdb.com/...",
-  "score": 9.6,
-  "genres": ["Adventure"],
-  "synopsis": "...",
-  "developers": ["Rockstar Games"],
-  "mediaType": "game"
-}
-```
+**Errors:**
+
+- `400` — missing or invalid params
+- `404` — not found on external API
 
 ---
 
-### AI 🔒
+### AI — `/ai`
 
-All AI endpoints require authentication. Response time may take 10–30 seconds due to Gemini + sequential cover fetching.
+All AI endpoints require authentication. Responses depend on Gemini 2.0 Flash + external API enrichment (cover images, scores from Jikan/IGDB).
 
-#### `POST /ai/vibe-check`
+#### POST `/ai/vibe-check`
 
-Analyze multiple titles from the user's collection and recommend new titles based on the dominant vibe.
+Given a set of reference titles from the user's collection, get AI recommendations across chosen media types.
+
+**Auth:** required
 
 **Request body:**
 
 ```json
 {
-  "referenceIds": [1, 3, 5],
+  "referenceIds": [3, 7, 12],
   "targetMediaTypes": ["anime", "game"],
   "excludeTitles": ["Berserk", "Dark Souls"]
 }
 ```
 
-> `excludeTitles` is optional. Used to exclude results from a previous search in the same session.
+`referenceIds` — collection item IDs (must belong to the authenticated user). `excludeTitles` is optional.
 
 **Response `200`:**
 
@@ -669,73 +855,73 @@ Analyze multiple titles from the user's collection and recommend new titles base
   "anime": [
     {
       "title": "Vinland Saga",
-      "reason": "Shares the brutal historical grounding and protagonist's journey through violence toward meaning.",
+      "reason": "Shares Berserk's brutal medieval setting and protagonist driven by vengeance.",
+      "externalId": "37521",
       "coverUrl": "https://...",
-      "externalId": "37521"
+      "score": 8.7,
+      "mediaType": "anime"
     }
   ],
-  "game": [...]
+  "game": [
+    /* same shape */
+  ]
 }
 ```
 
-**Response `400`:** `referenceIds must be a non-empty array` / `targetMediaTypes must be a non-empty array`
+Only keys in `targetMediaTypes` are present. Max 3 results per type.
 
-**Response `404`:** `No valid reference titles found in your collection`
+**Errors:**
+
+- `400` — `referenceIds` or `targetMediaTypes` missing or empty
+- `404` — none of the provided IDs found in user's collection
 
 ---
 
-#### `POST /ai/title-match`
+#### POST `/ai/title-match`
 
-Find similar titles across all three media based on a single title from the collection.
+Given one title from the user's collection, find similar titles across all three media types.
+
+**Auth:** required
 
 **Request body:**
 
 ```json
 {
   "collectionId": 3,
-  "excludeTitles": []
+  "excludeTitles": ["Vinland Saga"]
 }
 ```
 
-**Response `200`:** Same shape as `/ai/vibe-check`, always returns `anime`, `manga`, and `game` keys.
+`excludeTitles` is optional.
 
-**Response `400`:** `collectionId is required`
+**Response `200`:** Same shape as `/ai/vibe-check`, always includes `anime`, `manga`, and `game` keys.
 
-**Response `404`:** `Collection not found`
+**Errors:**
+
+- `400` — `collectionId` missing
+- `404` — collection item not found or doesn't belong to user
 
 ---
 
-#### `POST /ai/taste-dna`
+#### POST `/ai/taste-dna`
 
-Generate (or regenerate) a personal taste profile based on the user's entire collection. Upserts to the TasteDNAs table.
+Generate (or regenerate) a 3-sentence taste profile for the authenticated user based on their entire collection.
 
-**Request body:** `{}` (no body required)
+**Auth:** required
+
+**Request body:** none (empty `{}`)
 
 **Response `200`:**
 
 ```json
 {
-  "content": "Your taste gravitates toward narratives where quiet resilience meets overwhelming odds...",
-  "generatedAt": "2026-04-22T10:00:00.000Z"
+  "content": "John gravitates toward dark, psychologically complex narratives with morally ambiguous protagonists. His collection reflects a preference for slow-burn stories that reward patience with thematic depth...",
+  "generatedAt": "2026-04-24T10:00:00.000Z"
 }
 ```
 
-**Response `400`:** `Add some titles to your collection first before generating your Taste DNA.`
+The profile is stored in the database and overwritten on every call. The result is also accessible via `GET /auth/profile`.
 
----
+**Errors:**
 
-## Error Responses
-
-All errors follow this format:
-
-```json
-{ "message": "Error description" }
-```
-
-| Status | Name                  | Cause                                            |
-| ------ | --------------------- | ------------------------------------------------ |
-| `400`  | Bad Request           | Validation error, duplicate entry, invalid input |
-| `401`  | Unauthorized          | Missing or invalid token                         |
-| `403`  | Forbidden             | Valid token but not the resource owner           |
-| `404`  | Not Found             | Resource does not exist                          |
-| `500`  | Internal Server Error | Unexpected server error                          |
+- `400` — user's collection is empty
