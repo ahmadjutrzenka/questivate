@@ -15,17 +15,17 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-900">
-      <div className="bg-gray-800 p-8 rounded-2xl w-full max-w-md">
-        <h1 className="text-2xl font-bold text-white mb-6">Register</h1>
-        {error && <p className="text-red-400 text-sm mb-4">{error}</p>}
-        <form onSubmit={handleSubmit} className="space-y-4">
+    <div className="auth-page">
+      <div className="auth-card">
+        <h1 className="auth-title">Register</h1>
+        {error && <p className="auth-error">{error}</p>}
+        <form onSubmit={handleSubmit} className="auth-form">
           <input
             type="text"
             placeholder="Username"
             value={form.username}
             onChange={(e) => setForm({ ...form, username: e.target.value })}
-            className="w-full bg-gray-700 text-white px-4 py-2 rounded-lg outline-none"
+            className="input"
             required
           />
           <input
@@ -33,7 +33,7 @@ export default function RegisterPage() {
             placeholder="Email"
             value={form.email}
             onChange={(e) => setForm({ ...form, email: e.target.value })}
-            className="w-full bg-gray-700 text-white px-4 py-2 rounded-lg outline-none"
+            className="input"
             required
           />
           <input
@@ -41,20 +41,20 @@ export default function RegisterPage() {
             placeholder="Password"
             value={form.password}
             onChange={(e) => setForm({ ...form, password: e.target.value })}
-            className="w-full bg-gray-700 text-white px-4 py-2 rounded-lg outline-none"
+            className="input"
             required
           />
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-lg font-semibold disabled:opacity-50"
+            className="btn btn-primary auth-btn"
           >
             {loading ? "Loading..." : "Register"}
           </button>
         </form>
-        <p className="text-gray-400 text-sm mt-4 text-center">
-          Sudah punya akun?{" "}
-          <Link to="/login" className="text-indigo-400 hover:underline">
+        <p className="auth-footer">
+          Already have an account?{" "}
+          <Link to="/login" className="auth-link">
             Login
           </Link>
         </p>

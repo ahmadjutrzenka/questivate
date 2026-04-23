@@ -17,17 +17,17 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-900">
-      <div className="bg-gray-800 p-8 rounded-2xl w-full max-w-md">
-        <h1 className="text-2xl font-bold text-white mb-6">Login</h1>
-        {error && <p className="text-red-400 text-sm mb-4">{error}</p>}
-        <form onSubmit={handleSubmit} className="space-y-4">
+    <div className="auth-page">
+      <div className="auth-card">
+        <h1 className="auth-title">Login</h1>
+        {error && <p className="auth-error">{error}</p>}
+        <form onSubmit={handleSubmit} className="auth-form">
           <input
             type="email"
             placeholder="Email"
             value={form.email}
             onChange={(e) => setForm({ ...form, email: e.target.value })}
-            className="w-full bg-gray-700 text-white px-4 py-2 rounded-lg outline-none"
+            className="input"
             required
           />
           <input
@@ -35,42 +35,31 @@ export default function LoginPage() {
             placeholder="Password"
             value={form.password}
             onChange={(e) => setForm({ ...form, password: e.target.value })}
-            className="w-full bg-gray-700 text-white px-4 py-2 rounded-lg outline-none"
+            className="input"
             required
           />
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-lg font-semibold disabled:opacity-50"
+            className="btn btn-primary auth-btn"
           >
             {loading ? "Loading..." : "Login"}
           </button>
         </form>
-        <div style={{ margin: "16px 0", textAlign: "center" }}>
-          <div
-            style={{
-              fontSize: 13,
-              color: "var(--text-muted)",
-              marginBottom: 10,
-            }}
-          >
-            atau
-          </div>
-          <div style={{ display: "flex", justifyContent: "center" }}>
-            <GoogleLogin
-              onSuccess={(res) => dispatch(googleLogin(res.credential))}
-              onError={() => {}}
-              useOneTap={false}
-              theme="filled_black"
-              shape="rectangular"
-              width="320"
-            />
-          </div>
+        <div className="auth-divider">OR</div>
+        <div className="auth-google">
+          <GoogleLogin
+            onSuccess={(res) => dispatch(googleLogin(res.credential))}
+            onError={() => {}}
+            useOneTap={false}
+            theme="filled_black"
+            shape="rectangular"
+            width="320"
+          />
         </div>
-
-        <p className="text-gray-400 text-sm mt-4 text-center">
-          Belum punya akun?{" "}
-          <Link to="/register" className="text-indigo-400 hover:underline">
+        <p className="auth-footer">
+          Don't have an account?{" "}
+          <Link to="/register" className="auth-link">
             Register
           </Link>
         </p>
