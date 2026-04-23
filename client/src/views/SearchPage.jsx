@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router";
 import { searchMedia } from "../features/search/searchSlice";
 import { addToCollection } from "../features/collection/collectionSlice";
-import "./SearchPage.css";
 
 const SEARCH_TYPES = ["all", "anime", "manga", "game", "user"];
 const STATUSES = ["plan", "ongoing", "completed", "dropped"];

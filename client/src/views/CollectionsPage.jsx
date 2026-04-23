@@ -7,10 +7,16 @@ import {
 } from "../features/collection/collectionSlice";
 import { createReview, updateReview } from "../features/review/reviewSlice";
 import MediaCard from "../components/MediaCard";
-import "./CollectionsPage.css";
 
 const TYPES = ["all", "anime", "manga", "game"];
 const STATUSES = ["plan", "ongoing", "completed", "dropped"];
+
+const STATUS_LABELS = {
+  plan: "Plan to Watch",
+  ongoing: "Ongoing",
+  completed: "Completed",
+  dropped: "Dropped",
+};
 
 export default function CollectionsPage() {
   const dispatch = useDispatch();
@@ -92,7 +98,11 @@ export default function CollectionsPage() {
         <p className="page-loading">Loading…</p>
       ) : filtered.length === 0 ? (
         <p className="page-empty">
-          No {typeFilter === "all" ? "" : typeFilter + " "}titles yet.
+          No{" "}
+          {typeFilter === "all"
+            ? ""
+            : typeFilter.charAt(0).toUpperCase() + typeFilter.slice(1) + " "}
+          titles yet.
         </p>
       ) : (
         <div className="card-grid collections-grid">
@@ -139,7 +149,7 @@ export default function CollectionsPage() {
                 >
                   {STATUSES.map((s) => (
                     <option key={s} value={s}>
-                      {s}
+                      {STATUS_LABELS[s] || s}
                     </option>
                   ))}
                 </select>

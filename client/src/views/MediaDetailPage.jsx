@@ -5,7 +5,6 @@ import axios from "axios";
 import { useState } from "react";
 import { addToCollection } from "../features/collection/collectionSlice";
 import { BASE_URL } from "../constants/url";
-import "./MediaDetailPage.css";
 
 const STATUSES = ["plan", "ongoing", "completed", "dropped"];
 

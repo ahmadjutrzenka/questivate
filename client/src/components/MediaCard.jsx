@@ -1,5 +1,4 @@
 import { Link } from "react-router";
-import "./MediaCard.css";
 
 export default function MediaCard({
   id,

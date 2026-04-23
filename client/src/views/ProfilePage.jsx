@@ -9,8 +9,6 @@ import {
 } from "../features/collection/collectionSlice";
 import { generateTasteDNA } from "../features/tasteDna/tasteDnaSlice";
 import { BASE_URL } from "../constants/url";
-import "./UserProfilePage.css";
-import "./ProfilePage.css";
 
 export default function ProfilePage() {
   const dispatch = useDispatch();

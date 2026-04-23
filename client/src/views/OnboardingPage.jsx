@@ -5,7 +5,6 @@ import axios from "axios";
 import { BASE_URL } from "../constants/url";
 import { searchMedia } from "../features/search/searchSlice";
 import { addToCollection } from "../features/collection/collectionSlice";
-import "./OnboardingPage.css";
 
 const SEARCH_TYPES = ["all", "anime", "manga", "game"];
 
@@ -215,11 +214,11 @@ export default function OnboardingPage() {
         <div className="onboarding-header">
           <p className="onboarding-eyebrow">Welcome to Questivate</p>
           <h1 className="onboarding-title">
-            Pilih minimal 3 judul untuk memulai koleksimu
+            Select at least 3 titles to start your collection
           </h1>
           <p className="onboarding-subtitle">
-            Tambahkan anime, manga, atau game yang kamu suka. Ini akan jadi
-            benih koleksimu — kamu bisa selalu menambah lebih banyak nanti.
+            Add anime, manga, or games you like. This will be the seed of your
+            collection and you can always add more later.
           </p>
 
           {/* Progress dots */}
@@ -239,7 +238,7 @@ export default function OnboardingPage() {
               ))}
             </div>
             <p className="progress-label">
-              <span>{selected.length}</span> / 3 dipilih
+              <span>{selected.length}</span> / 3 selected
             </p>
           </div>
         </div>
@@ -247,7 +246,7 @@ export default function OnboardingPage() {
         {/* Popular Anime */}
         <div className="onboarding-section">
           <div className="onboarding-section-header">
-            <h2 className="onboarding-section-title">Anime Populer</h2>
+            <h2 className="onboarding-section-title">Popular Anime</h2>
             <span className="badge badge-anime">Anime</span>
           </div>
           <div className="popular-grid">
@@ -267,7 +266,7 @@ export default function OnboardingPage() {
         {/* Popular Manga */}
         <div className="onboarding-section">
           <div className="onboarding-section-header">
-            <h2 className="onboarding-section-title">Manga Populer</h2>
+            <h2 className="onboarding-section-title">Popular Manga</h2>
             <span className="badge badge-manga">Manga</span>
           </div>
           <div className="popular-grid">
@@ -287,7 +286,7 @@ export default function OnboardingPage() {
         {/* Popular Games */}
         <div className="onboarding-section">
           <div className="onboarding-section-header">
-            <h2 className="onboarding-section-title">Game Populer</h2>
+            <h2 className="onboarding-section-title">Popular Games</h2>
             <span className="badge badge-game">Game</span>
           </div>
           <div className="popular-grid">
@@ -305,26 +304,26 @@ export default function OnboardingPage() {
         </div>
 
         {/* Divider */}
-        <div className="onboarding-divider">atau cari sendiri</div>
+        <div className="onboarding-divider">or find your own</div>
 
         {/* Search section */}
         <div className="onboarding-search-section">
           <p className="onboarding-search-label">
-            Tidak menemukan yang kamu suka? Cari judul spesifik di sini.
+            Can't find your favorite? Find it here.
           </p>
           <form className="onboarding-search-form" onSubmit={handleSearch}>
             <input
               className="input onboarding-search-input"
               value={q}
               onChange={(e) => setQ(e.target.value)}
-              placeholder="Cari anime, manga, atau game…"
+              placeholder="Find anime, manga, or games…"
             />
             <button
               type="submit"
               className="btn btn-secondary"
               disabled={searchLoading || !q.trim()}
             >
-              {searchLoading ? "Mencari…" : "Cari"}
+              {searchLoading ? "Searching…" : "Search"}
             </button>
           </form>
 
@@ -337,7 +336,7 @@ export default function OnboardingPage() {
                 className={`type-tab ${searchType === t ? "active" : ""}`}
                 onClick={() => setSearchType(t)}
               >
-                {t === "all" ? "Semua" : t.charAt(0).toUpperCase() + t.slice(1)}
+                {t === "all" ? "All" : t.charAt(0).toUpperCase() + t.slice(1)}
               </button>
             ))}
           </div>
@@ -370,9 +369,7 @@ export default function OnboardingPage() {
                 (mt) => (results[mt] || []).length === 0,
               ) &&
                 !searchLoading && (
-                  <p className="onboarding-no-results">
-                    Tidak ada hasil ditemukan.
-                  </p>
+                  <p className="onboarding-no-results">No results found.</p>
                 )}
             </div>
           )}
@@ -382,10 +379,10 @@ export default function OnboardingPage() {
       {/* Sticky bottom bar */}
       <div className="onboarding-bottom-bar">
         <div className="onboarding-bottom-info">
-          <p className="onboarding-count">{selected.length} dipilih</p>
+          <p className="onboarding-count">{selected.length} selected</p>
           {!canContinue && (
             <p className="onboarding-count-hint">
-              Pilih {3 - selected.length} lagi untuk melanjutkan
+              Pick {3 - selected.length} more to continue
             </p>
           )}
         </div>
@@ -404,14 +401,14 @@ export default function OnboardingPage() {
                 <button
                   className="selected-chip-remove"
                   onClick={() => removeSelected(item)}
-                  aria-label={`Hapus ${item.title}`}
+                  aria-label={`Remove ${item.title}`}
                 >
                   ×
                 </button>
               </div>
             ))}
             {selected.length > 3 && (
-              <div className="selected-chip">+{selected.length - 3} lagi</div>
+              <div className="selected-chip">+{selected.length - 3} more</div>
             )}
           </div>
         )}
@@ -424,10 +421,10 @@ export default function OnboardingPage() {
           {submitting ? (
             <>
               <span className="btn-continue-spinner" />
-              Menyimpan…
+              Saving…
             </>
           ) : (
-            "Lanjutkan ke Dashboard →"
+            "Continue to Dashboard →"
           )}
         </button>
       </div>

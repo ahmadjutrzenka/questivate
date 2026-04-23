@@ -5,7 +5,6 @@ import { fetchCollections } from "../features/collection/collectionSlice";
 import { fetchRecentReviews } from "../features/review/reviewSlice";
 import MediaCard from "../components/MediaCard";
 import ReviewCarousel from "../components/ReviewCarousel.jsx";
-import "./DashboardPage.css";
 
 export default function DashboardPage() {
   const dispatch = useDispatch();
@@ -49,7 +48,7 @@ export default function DashboardPage() {
         </div>
         <div className="hero-ctas">
           <Link to="/vibe-match" className="btn-primary">
-            Find your vibe
+            Vibe Check
           </Link>
           <Link to="/collections" className="btn-secondary">
             Title match
