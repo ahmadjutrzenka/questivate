@@ -1,10 +1,11 @@
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router";
 import { fetchCollections } from "../features/collection/collectionSlice";
 import { fetchRecentReviews } from "../features/review/reviewSlice";
 import MediaCard from "../components/MediaCard";
 import ReviewCarousel from "../components/ReviewCarousel.jsx";
+import fabIcon from "../assets/loonaColors.svg";
 
 function getTopGenres(items, n = 3) {
   const count = {};
@@ -72,6 +73,7 @@ export default function DashboardPage() {
   const { user } = useSelector((s) => s.auth);
   const { items } = useSelector((s) => s.collection);
   const { reviews } = useSelector((s) => s.review);
+  const [fabOpen, setFabOpen] = useState(false);
 
   useEffect(() => {
     dispatch(fetchCollections());
@@ -229,7 +231,7 @@ export default function DashboardPage() {
       )}
 
       {/* ── Discover CTA ── */}
-      <section className="discover-ctas">
+      <section className="discover-ctas desktop-only">
         <Link to="/vibe-check" className="cta-card">
           <h3>Vibe Check</h3>
           <p>Pick titles, AI finds what to watch, read, or play next.</p>
@@ -239,6 +241,28 @@ export default function DashboardPage() {
           <p>Choose one title, find its counterparts across all three media.</p>
         </Link>
       </section>
+
+      <div className={`fab-wrapper ${fabOpen ? "active" : ""}`}>
+        <div className="fab-items">
+          <Link
+            to="/vibe-check"
+            className="fab-item"
+            onClick={() => setFabOpen(false)}
+          >
+            Vibe Check
+          </Link>
+          <Link
+            to="/collections?mode=title-match"
+            className="fab-item"
+            onClick={() => setFabOpen(false)}
+          >
+            Title Match
+          </Link>
+        </div>
+        <button className="fab-main-btn" onClick={() => setFabOpen(!fabOpen)}>
+          <img src={fabIcon} alt="Menu" className="fab-icon" />{" "}
+        </button>
+      </div>
 
       {/* ── Recently added ── */}
       <section className="section">

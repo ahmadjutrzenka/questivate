@@ -22,6 +22,11 @@ export default function VibeCheckPage() {
   const [selected, setSelected] = useState({ anime: [], manga: [], game: [] });
   const [targetTypes, setTargetTypes] = useState([]);
   const [addModal, setAddModal] = useState(null);
+  const [collapsed, setCollapsed] = useState({
+    anime: false,
+    manga: false,
+    game: false,
+  });
 
   const groupedItems = {
     anime: items.filter((c) => c.mediaType === "anime"),
@@ -140,68 +145,93 @@ export default function VibeCheckPage() {
       {/* Step 1 — Pick references */}
       {step === 1 && (
         <div className="vibe-step-content">
-          <h1 className="vibe-title">Pick your references</h1>
-          <p className="vibe-subtitle">
-            Select titles from your collection. AI will find the vibe.
-          </p>
+          {/* Header Baru (Judul di kiri, Tombol di kanan) */}
+          <div className="vibe-step-header">
+            <div className="vibe-step-text">
+              <h1 className="vibe-title">Pick your references</h1>
+              <p className="vibe-subtitle">
+                Select titles from your collection. AI will find the vibe.
+              </p>
+            </div>
+            <div className="vibe-step-actions">
+              <button
+                className="btn btn-secondary"
+                disabled={totalSelected === 0}
+                onClick={() => setStep(2)}
+              >
+                Next ({totalSelected} selected)
+              </button>
+            </div>
+          </div>
 
-          {MEDIA_TYPES.map((type) => {
-            const group = groupedItems[type];
-            if (group.length === 0) return null;
-            const allChecked = selected[type].length === group.length;
-            const someChecked = selected[type].length > 0 && !allChecked;
-            return (
-              <div key={type} className="vibe-group">
-                <div className="vibe-group-header">
-                  <label className="vibe-select-all">
-                    <input
-                      type="checkbox"
-                      checked={allChecked}
-                      ref={(el) => {
-                        if (el) el.indeterminate = someChecked;
-                      }}
-                      onChange={() => toggleAllType(type)}
-                    />
-                    <span className={`badge badge-${type}`}>{type}</span>
-                    <span className="vibe-group-count">
-                      {selected[type].length}/{group.length} selected
-                    </span>
-                  </label>
-                </div>
-                <div className="vibe-group-items">
-                  {group.map((c) => (
+          {/* Kolom Pembungkus Media Type */}
+          <div className="vibe-groups-columns">
+            {MEDIA_TYPES.map((type) => {
+              const group = groupedItems[type];
+              if (group.length === 0) return null;
+              const allChecked = selected[type].length === group.length;
+              const someChecked = selected[type].length > 0 && !allChecked;
+              return (
+                <div key={type} className="vibe-group">
+                  <div
+                    className={`vibe-group-header ${collapsed[type] ? "collapsed" : ""}`}
+                    onClick={() =>
+                      setCollapsed((prev) => ({ ...prev, [type]: !prev[type] }))
+                    }
+                  >
                     <label
-                      key={c.id}
-                      className={`vibe-item ${selected[type].includes(c.id) ? "checked" : ""}`}
+                      className="vibe-select-all"
+                      onClick={(e) => e.stopPropagation()}
                     >
                       <input
                         type="checkbox"
-                        checked={selected[type].includes(c.id)}
-                        onChange={() => toggleItem(type, c.id)}
+                        checked={allChecked}
+                        ref={(el) => {
+                          if (el) el.indeterminate = someChecked;
+                        }}
+                        onChange={() => toggleAllType(type)}
                       />
-                      {c.coverUrl && (
-                        <img
-                          src={c.coverUrl}
-                          alt={c.title}
-                          className="vibe-item-cover"
-                        />
-                      )}
-                      <span className="vibe-item-title">{c.title}</span>
+                      <span className={`badge badge-${type}`}>{type}</span>
                     </label>
-                  ))}
-                </div>
-              </div>
-            );
-          })}
+                    <span className="vibe-group-count">
+                      {selected[type].length}/{group.length} selected
+                    </span>
+                    <span
+                      className={`vibe-collapse-icon ${collapsed[type] ? "collapsed" : ""}`}
+                    >
+                      ▼
+                    </span>
+                  </div>
 
-          <div className="vibe-step-footer">
-            <button
-              className="btn btn-primary"
-              disabled={totalSelected === 0}
-              onClick={() => setStep(2)}
-            >
-              Next → ({totalSelected} selected)
-            </button>
+                  <div
+                    className={`vibe-group-body ${collapsed[type] ? "is-collapsed" : ""}`}
+                  >
+                    <div className="vibe-group-items">
+                      {group.map((c) => (
+                        <label
+                          key={c.id}
+                          className={`vibe-item ${selected[type].includes(c.id) ? "checked" : ""}`}
+                        >
+                          <input
+                            type="checkbox"
+                            checked={selected[type].includes(c.id)}
+                            onChange={() => toggleItem(type, c.id)}
+                          />
+                          {c.coverUrl && (
+                            <img
+                              src={c.coverUrl}
+                              alt={c.title}
+                              className="vibe-item-cover"
+                            />
+                          )}
+                          <span className="vibe-item-title">{c.title}</span>
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
       )}
@@ -209,11 +239,29 @@ export default function VibeCheckPage() {
       {/* Step 2 — Output type */}
       {step === 2 && (
         <div className="vibe-step-content">
-          <h1 className="vibe-title">What do you want?</h1>
-          <p className="vibe-subtitle">
-            Pick which media types to get recommendations for.
-          </p>
-
+          <div className="vibe-step-header">
+            <div className="vibe-step-text">
+              <h1 className="vibe-title">What do you want?</h1>
+              <p className="vibe-subtitle">
+                Pick which media types to get recommendations for.
+              </p>
+            </div>
+            <div className="vibe-step-actions">
+              <button className="btn btn-ghost" onClick={() => setStep(1)}>
+                Back
+              </button>
+              <button
+                className="btn btn-secondary"
+                disabled={targetTypes.length === 0 || loading}
+                onClick={() => {
+                  setStep(3);
+                  handleSearch();
+                }}
+              >
+                {loading ? "Finding your vibe…" : "Find my vibe"}
+              </button>
+            </div>
+          </div>
           <div className="output-grid">
             {[...MEDIA_TYPES, "all"].map((t) => {
               const isAll = t === "all";
@@ -323,22 +371,6 @@ export default function VibeCheckPage() {
               );
             })}
           </div>
-
-          <div className="vibe-step-footer">
-            <button className="btn btn-ghost" onClick={() => setStep(1)}>
-              ← Back
-            </button>
-            <button
-              className="btn btn-primary"
-              disabled={targetTypes.length === 0 || loading}
-              onClick={() => {
-                setStep(3);
-                handleSearch();
-              }}
-            >
-              {loading ? "Finding your vibe…" : "Find my vibe →"}
-            </button>
-          </div>
         </div>
       )}
 
@@ -352,11 +384,7 @@ export default function VibeCheckPage() {
             </button>
           </div>
 
-          {loading && (
-            <p className="page-loading">
-              AI is analysing your vibe… (this takes ~15s)
-            </p>
-          )}
+          {loading && <p className="page-loading">Vibe checking...</p>}
           {error && <p className="page-error">{error}</p>}
 
           {!loading &&

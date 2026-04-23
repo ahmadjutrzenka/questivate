@@ -122,7 +122,12 @@ class AIController {
       const text = await generateContent(prompt);
 
       const parsed = parseGeminiJSON(text);
-      const enriched = await enrichAIResults(parsed);
+      const filtered = {};
+      for (const type of targetTypes) {
+        filtered[type] = parsed[type] || [];
+      }
+
+      const enriched = await enrichAIResults(filtered);
 
       res.status(200).json(enriched);
     } catch (error) {

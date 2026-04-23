@@ -20,8 +20,13 @@ export default function TitleMatchPage() {
     (s) => s.recommendation,
   );
   const [addModal, setAddModal] = useState(null);
+  const [reloadingType, setReloadingType] = useState(null);
 
   const source = items.find((c) => String(c.id) === String(id));
+
+  useEffect(() => {
+    if (!loading) setReloadingType(null);
+  }, [loading]);
 
   useEffect(() => {
     if (id) {
@@ -31,6 +36,8 @@ export default function TitleMatchPage() {
   }, [id, dispatch]);
 
   const handleSearchAgain = (type) => {
+    setReloadingType(type);
+
     const currentTitles = (titleResults[type] || []).map((r) => r.title);
     dispatch(addExcluded({ type, titles: currentTitles }));
     const excludeTitles = [
@@ -91,27 +98,36 @@ export default function TitleMatchPage() {
         </div>
       )}
 
-      {loading && (
+      {loading && !reloadingType && (
         <p className="page-loading">AI is finding similar titles… (~15s)</p>
       )}
       {error && <p className="page-error">{error}</p>}
 
-      {!loading &&
-        hasResults &&
-        MEDIA_TYPES.map((type) => {
-          const list = titleResults[type] || [];
-          if (list.length === 0) return null;
-          return (
-            <section key={type} className="rec-section">
-              <div className="section-header">
-                <span className={`badge badge-${type}`}>{type}</span>
-                <button
-                  className="btn btn-ghost rec-again-btn"
-                  onClick={() => handleSearchAgain(type)}
-                >
-                  Search again ↻
-                </button>
-              </div>
+      {MEDIA_TYPES.map((type) => {
+        const list = titleResults[type] || [];
+        const isReloadingThis = reloadingType === type;
+
+        if (list.length === 0 && !isReloadingThis) return null;
+        return (
+          <section key={type} className="rec-section">
+            <div className="section-header">
+              <span className={`badge badge-${type}`}>{type}</span>
+              <button
+                className="btn btn-ghost rec-again-btn"
+                onClick={() => handleSearchAgain(type)}
+                disabled={loading}
+              >
+                Search again ↻
+              </button>
+            </div>
+            {isReloadingThis ? (
+              <p
+                className="page-loading"
+                style={{ textAlign: "left", padding: "24px 0" }}
+              >
+                Finding more {type} recommendations...
+              </p>
+            ) : (
               <div className="rec-grid">
                 {list.map((item, i) => (
                   <div key={i} className="rec-card">
@@ -137,9 +153,10 @@ export default function TitleMatchPage() {
                   </div>
                 ))}
               </div>
-            </section>
-          );
-        })}
+            )}
+          </section>
+        );
+      })}
 
       {addModal && (
         <div

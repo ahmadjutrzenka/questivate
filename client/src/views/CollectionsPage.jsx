@@ -138,7 +138,7 @@ export default function CollectionsPage() {
                 to={`/title-match/${c.id}`}
                 className={`btn btn-secondary collection-review-btn ${isTitleMatchMode ? "title-match-highlight" : ""}`}
               >
-                Title Match →
+                Title Match
               </Link>
             </div>
           ))}

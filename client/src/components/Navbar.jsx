@@ -9,6 +9,8 @@ export default function Navbar() {
   const { user } = useSelector((s) => s.auth);
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
   const handleLogout = () => {
     setDropdownOpen(false);
     dispatch(logout());
@@ -20,19 +22,31 @@ export default function Navbar() {
   return (
     <nav className="navbar">
       <div className="navbar-inner">
-        {/* Logo */}
-        <Link to="/" className="navbar-logo">
+        <button
+          className={`burger-btn ${isMobileMenuOpen ? "open" : ""}`}
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+        >
+          <span />
+          <span />
+          <span />
+        </button>
+
+        <Link
+          to="/"
+          className="navbar-logo"
+          onClick={() => setIsMobileMenuOpen(false)}
+        >
           Questivate
         </Link>
 
-        {/* Main links */}
-        <div className="navbar-links">
+        <div className={`navbar-links ${isMobileMenuOpen ? "open" : ""}`}>
           <NavLink
             to="/"
             end
             className={({ isActive }) =>
               isActive ? "nav-link active" : "nav-link"
             }
+            onClick={() => setIsMobileMenuOpen(false)}
           >
             Dashboard
           </NavLink>
@@ -41,6 +55,7 @@ export default function Navbar() {
             className={({ isActive }) =>
               isActive ? "nav-link active" : "nav-link"
             }
+            onClick={() => setIsMobileMenuOpen(false)}
           >
             Collections
           </NavLink>
@@ -49,6 +64,7 @@ export default function Navbar() {
             className={({ isActive }) =>
               isActive ? "nav-link active" : "nav-link"
             }
+            onClick={() => setIsMobileMenuOpen(false)}
           >
             Search
           </NavLink>
@@ -57,12 +73,12 @@ export default function Navbar() {
             className={({ isActive }) =>
               isActive ? "nav-link active" : "nav-link"
             }
+            onClick={() => setIsMobileMenuOpen(false)}
           >
             Vibe Check
           </NavLink>
         </div>
 
-        {/* User section */}
         <div className="navbar-user">
           <button
             className="navbar-user-btn"
@@ -98,7 +114,6 @@ export default function Navbar() {
 
           {dropdownOpen && (
             <>
-              {/* Overlay to close dropdown on outside click */}
               <div
                 className="navbar-overlay"
                 onClick={() => setDropdownOpen(false)}

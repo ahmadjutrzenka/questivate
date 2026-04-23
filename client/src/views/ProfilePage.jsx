@@ -85,7 +85,7 @@ export default function ProfilePage() {
     <div className="profile-page">
       <div className="settings-header">
         <h1 className="vibe-title">Profile settings</h1>
-        <Link to={`/users/${user?.username}`} className="btn btn-ghost">
+        <Link to={`/users/${user?.username}`} className="btn btn-secondary">
           View public profile
         </Link>
       </div>
@@ -93,66 +93,68 @@ export default function ProfilePage() {
       {feedback && <div className="feedback-toast">{feedback}</div>}
 
       {/* Avatar */}
-      <section className="settings-section">
-        <h2 className="settings-section-title">Avatar</h2>
-        <div className="avatar-row">
-          <div className="profile-avatar-wrap">
-            {user?.avatar ? (
-              <img
-                src={user.avatar}
-                alt={user?.username}
-                className="profile-avatar"
-              />
-            ) : (
-              <div className="profile-avatar-placeholder">
-                {user?.username?.[0]?.toUpperCase()}
-              </div>
-            )}
+      <div className="settings-top-row">
+        <section className="settings-section">
+          <h2 className="settings-section-title">Avatar</h2>
+          <div className="avatar-row">
+            <div className="profile-avatar-wrap">
+              {user?.avatar ? (
+                <img
+                  src={user.avatar}
+                  alt={user?.username}
+                  className="profile-avatar"
+                />
+              ) : (
+                <div className="profile-avatar-placeholder">
+                  {user?.username?.[0]?.toUpperCase()}
+                </div>
+              )}
+            </div>
+            <div>
+              <button
+                className="btn btn-secondary"
+                onClick={() => fileRef.current.click()}
+                disabled={avatarUploading}
+              >
+                {avatarUploading ? "Uploading…" : "Change avatar"}
+              </button>
+              <p className="settings-hint">JPG, PNG or WEBP, max 5MB</p>
+            </div>
+            <input
+              ref={fileRef}
+              type="file"
+              accept="image/*"
+              style={{ display: "none" }}
+              onChange={handleAvatarChange}
+            />
           </div>
-          <div>
-            <button
-              className="btn btn-secondary"
-              onClick={() => fileRef.current.click()}
-              disabled={avatarUploading}
-            >
-              {avatarUploading ? "Uploading…" : "Change avatar"}
-            </button>
-            <p className="settings-hint">JPG, PNG or WEBP, max 5MB</p>
-          </div>
-          <input
-            ref={fileRef}
-            type="file"
-            accept="image/*"
-            style={{ display: "none" }}
-            onChange={handleAvatarChange}
-          />
-        </div>
-      </section>
+        </section>
 
-      {/* Bio */}
-      <section className="settings-section">
-        <h2 className="settings-section-title">Bio</h2>
-        <form onSubmit={handleBioSave} className="settings-form">
-          <textarea
-            className="input textarea"
-            rows={3}
-            value={bio}
-            onChange={(e) => setBio(e.target.value)}
-            placeholder="Tell others about your taste…"
-            maxLength={300}
-          />
-          <div className="settings-form-footer">
-            <span className="settings-hint">{bio.length}/300</span>
-            <button
-              type="submit"
-              className="btn btn-primary"
-              disabled={bioSaving}
-            >
-              {bioSaving ? "Saving…" : "Save bio"}
-            </button>
-          </div>
-        </form>
-      </section>
+        {/* Bio */}
+        <section className="settings-section">
+          <h2 className="settings-section-title">Bio</h2>
+          <form onSubmit={handleBioSave} className="settings-form">
+            <textarea
+              className="input textarea"
+              rows={3}
+              value={bio}
+              onChange={(e) => setBio(e.target.value)}
+              placeholder="Tell others about your taste…"
+              maxLength={300}
+            />
+            <div className="settings-form-footer">
+              <span className="settings-hint">{bio.length}/300</span>
+              <button
+                type="submit"
+                className="btn btn-secondary"
+                disabled={bioSaving}
+              >
+                {bioSaving ? "Saving…" : "Save bio"}
+              </button>
+            </div>
+          </form>
+        </section>
+      </div>
 
       {/* Taste DNA */}
       <section className="settings-section">
@@ -207,7 +209,7 @@ export default function ProfilePage() {
                   />
                   <span className="favorite-title">{c.title}</span>
                   <button
-                    className="btn btn-danger favorite-remove-btn"
+                    className="favorite-remove-btn"
                     onClick={() => handleToggleFavorite(c)}
                   >
                     ✕
@@ -222,7 +224,7 @@ export default function ProfilePage() {
           <div className="favorites-manager" style={{ marginTop: 16 }}>
             <p className="settings-label">Add from your collection</p>
             <div className="add-favorites-grid">
-              {nonFavorites.slice(0, 12).map((c) => (
+              {nonFavorites.map((c) => (
                 <button
                   key={c.id}
                   className="add-favorite-item"
