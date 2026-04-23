@@ -111,7 +111,7 @@ class AuthController {
         throw { name: "BadRequest", message: "Google email is not verified" };
       }
 
-      const [user] = await User.findOrCreate({
+      const [user, created] = await User.findOrCreate({
         where: { email: payload.email },
         defaults: {
           username: payload.name || payload.email.split("@")[0],
@@ -126,7 +126,7 @@ class AuthController {
         email: user.email,
       });
 
-      res.status(200).json({ access_token });
+      res.status(200).json({ access_token, isNewUser: created });
     } catch (error) {
       next(error);
     }

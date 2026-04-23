@@ -102,6 +102,9 @@ export const googleLogin = (googleToken) => async (dispatch) => {
       },
     );
     localStorage.setItem("access_token", data.access_token);
+    if (data.isNewUser) {
+      sessionStorage.setItem("new_registration", "1");
+    }
     dispatch(loginSuccess(data.access_token));
   } catch (error) {
     dispatch(

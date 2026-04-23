@@ -18,5 +18,5 @@ export default function OAuthCallback() {
     navigate("/");
   }, []);
 
-  return <p className="text-white text-center mt-10">Redirecting...</p>;
+  return <p className="auth-redirect">Redirecting...</p>;
 }
