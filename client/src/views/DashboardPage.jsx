@@ -5,6 +5,7 @@ import { fetchCollections } from "../features/collection/collectionSlice";
 import { fetchRecentReviews } from "../features/review/reviewSlice";
 import MediaCard from "../components/MediaCard";
 import ReviewCarousel from "../components/ReviewCarousel.jsx";
+import "./DashboardPage.css";
 
 export default function DashboardPage() {
   const dispatch = useDispatch();
@@ -96,6 +97,18 @@ export default function DashboardPage() {
         </section>
       )}
 
+      {/* Discover CTA */}
+      <section className="discover-ctas">
+        <Link to="/vibe-match" className="cta-card">
+          <h3>Vibe Match</h3>
+          <p>Pick titles, AI finds what to watch, read, or play next.</p>
+        </Link>
+        <Link to="/collections" className="cta-card">
+          <h3>Title Match</h3>
+          <p>Choose one title, find its counterparts across all three media.</p>
+        </Link>
+      </section>
+
       {/* Recently added */}
       <section className="section">
         <div className="section-header">
@@ -123,18 +136,6 @@ export default function DashboardPage() {
       <section className="section">
         <h2>Recent reviews</h2>
         <ReviewCarousel reviews={reviews} />
-      </section>
-
-      {/* Discover CTA */}
-      <section className="discover-ctas">
-        <Link to="/vibe-match" className="cta-card">
-          <h3>Vibe Match</h3>
-          <p>Pick titles, AI finds what to watch, read, or play next.</p>
-        </Link>
-        <Link to="/collections" className="cta-card">
-          <h3>Title Match</h3>
-          <p>Choose one title, find its counterparts across all three media.</p>
-        </Link>
       </section>
     </div>
   );

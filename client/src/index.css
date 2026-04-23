@@ -16,6 +16,20 @@
 
   /* Surface & background */
   --bg: #0e0e14;
+
+  --bg-main: #0f172a; /* Warna background utama (biru sangat gelap) */
+  --bg-card: #1e293b; /* Warna kotak/kartu */
+  --primary: #6366f1; /* Warna tombol utama (Indigo) */
+  --primary-hover: #4f46e5;
+  --text-light: #f8fafc;
+  --text-muted: #94a3b8;
+  --border-color: #334155;
+
+  /* Spacing & Radius */
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --transition-speed: 0.2s;
+
   --surface: #16161f;
   --surface-2: #1e1e2a;
   --surface-3: #252532;
@@ -48,6 +62,10 @@
   color: var(--text);
   background: var(--bg);
   -webkit-font-smoothing: antialiased;
+
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 /* ─── Reset ────────────────────────────────────────────────────── */
@@ -73,7 +91,14 @@ img {
 
 /* ─── Body & root ──────────────────────────────────────────────── */
 body {
-  background: var(--bg);
+  background-color: var(--bg-main);
+  color: var(--text-light);
+  font-family:
+    "Inter",
+    system-ui,
+    -apple-system,
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
 #root {
   min-height: 100svh;
@@ -165,11 +190,18 @@ body {
 }
 
 .btn-primary {
-  background: var(--accent);
-  color: #fff;
+  background-color: var(--primary);
+  color: #ffffff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: var(--radius-md);
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color var(--transition-speed) ease;
 }
-.btn-primary:hover:not(:disabled) {
-  background: var(--accent-hover);
+.btn-primary:hover {
+  background-color: var(--primary-hover);
 }
 
 .btn-secondary {
@@ -218,4 +250,12 @@ body {
 }
 .input:focus {
   border-color: var(--accent);
+}
+
+.card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); /* Bayangan lembut */
 }
