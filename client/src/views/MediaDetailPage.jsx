@@ -5,16 +5,16 @@ import axios from "axios";
 import { useState } from "react";
 import { addToCollection } from "../features/collection/collectionSlice";
 import { BASE_URL } from "../constants/url";
+import { toast } from "react-toastify";
 
 const STATUSES = ["plan", "ongoing", "completed", "dropped"];
 const STATUS_LABELS = {
-  plan: "Plan to Watch",
+  plan: "Planned",
   ongoing: "Ongoing",
   completed: "Completed",
   dropped: "Dropped",
 };
 
-/* ── helpers ─────────────────────────────────────────────── */
 function formatDate(dateStr) {
   if (!dateStr) return null;
   const d = new Date(dateStr);
@@ -36,7 +36,6 @@ function formatUnix(ts) {
   });
 }
 
-/* ── sub-components ──────────────────────────────────────── */
 function MetaRow({ label, value }) {
   if (!value) return null;
   return (
@@ -209,11 +208,11 @@ export default function MediaDetailPage() {
     (c) => c.externalId === String(externalId) && c.mediaType === type,
   );
 
-  const handleAddSave = (e) => {
+  const handleAddSave = async (e) => {
     e.preventDefault();
     const fd = new FormData(e.target);
     const m = data.mediaInfo;
-    dispatch(
+    const ok = await dispatch(
       addToCollection({
         mediaType: type,
         externalId: String(externalId),
@@ -231,6 +230,8 @@ export default function MediaDetailPage() {
       }),
     );
     setAddModal(false);
+    if (ok) toast.success(`${title} added to collection`);
+    else toast.error("Failed to add to collection");
   };
 
   if (loading) return <p className="page-loading">Loading…</p>;

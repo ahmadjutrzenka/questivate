@@ -6,6 +6,7 @@ import {
   clearSession,
 } from "../features/recommendation/recommendationSlice";
 import { addToCollection } from "../features/collection/collectionSlice";
+import { toast } from "react-toastify";
 
 const MEDIA_TYPES = ["anime", "manga", "game"];
 const STATUSES = ["plan", "ongoing", "completed", "dropped"];
@@ -93,10 +94,10 @@ export default function VibeCheckPage() {
     setTargetTypes([]);
   };
 
-  const handleAddSave = (e) => {
+  const handleAddSave = async (e) => {
     e.preventDefault();
     const fd = new FormData(e.target);
-    dispatch(
+    const ok = await dispatch(
       addToCollection({
         mediaType: addModal.mediaType,
         externalId: String(addModal.externalId),
@@ -109,6 +110,8 @@ export default function VibeCheckPage() {
       }),
     );
     setAddModal(null);
+    if (ok) toast.success(`${addModal.title} added to collection`);
+    else toast.error("Failed to add to collection");
   };
 
   const hasResults = MEDIA_TYPES.some((t) => vibeCheckResults[t]?.length > 0);

@@ -6,6 +6,70 @@ import { fetchRecentReviews } from "../features/review/reviewSlice";
 import MediaCard from "../components/MediaCard";
 import ReviewCarousel from "../components/ReviewCarousel.jsx";
 
+/* ── helpers ─────────────────────────────────────────────── */
+function getTopGenres(items, n = 3) {
+  const count = {};
+  items.forEach((c) => {
+    (c.genres || []).forEach((g) => {
+      count[g] = (count[g] || 0) + 1;
+    });
+  });
+  const total = items.length || 1;
+  return Object.entries(count)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, n)
+    .map(([genre, cnt]) => ({ genre, pct: Math.round((cnt / total) * 100) }));
+}
+
+function getAvgRatings(items) {
+  const avg = (arr) => {
+    const scored = arr.filter((c) => c.score != null);
+    if (!scored.length) return null;
+    return (scored.reduce((s, c) => s + c.score, 0) / scored.length).toFixed(1);
+  };
+  return {
+    overall: avg(items),
+    anime: avg(items.filter((c) => c.mediaType === "anime")),
+    manga: avg(items.filter((c) => c.mediaType === "manga")),
+    game: avg(items.filter((c) => c.mediaType === "game")),
+  };
+}
+
+/* ── sub-components ──────────────────────────────────────── */
+function GenreBar({ genre, pct }) {
+  return (
+    <div className="dash-genre-row">
+      <div className="dash-genre-label">
+        <span className="dash-genre-name">{genre}</span>
+        <span className="dash-genre-pct">{pct}%</span>
+      </div>
+      <div className="dash-genre-track">
+        <div className="dash-genre-fill" style={{ width: `${pct}%` }} />
+      </div>
+    </div>
+  );
+}
+
+function RatingBar({ label, value, color }) {
+  if (value == null) return null;
+  const pct = (value / 10) * 100;
+  return (
+    <div className="dash-rating-row">
+      <div className="dash-rating-header">
+        <span className="dash-rating-label">{label}</span>
+        <span className="dash-rating-value">{value}</span>
+      </div>
+      <div className="dash-rating-track">
+        <div
+          className="dash-rating-fill"
+          style={{ width: `${pct}%`, backgroundColor: color }}
+        />
+      </div>
+    </div>
+  );
+}
+
+/* ── main page ───────────────────────────────────────────── */
 export default function DashboardPage() {
   const dispatch = useDispatch();
   const { user } = useSelector((s) => s.auth);
@@ -21,58 +85,125 @@ export default function DashboardPage() {
   const recent = [...items]
     .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
     .slice(0, 6);
+
   const stats = {
     anime: items.filter((c) => c.mediaType === "anime").length,
     manga: items.filter((c) => c.mediaType === "manga").length,
     game: items.filter((c) => c.mediaType === "game").length,
+    reviews: reviews.length,
   };
+
+  const topGenres = getTopGenres(items);
+  const avgRatings = getAvgRatings(items);
 
   const hour = new Date().getHours();
   const greeting =
     hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening";
 
+  const initials = user?.username?.[0]?.toUpperCase() ?? "?";
+
   return (
     <div className="dashboard">
-      {/* Hero */}
-      <section className="dashboard-hero">
-        <div>
-          <p className="greeting">
-            {greeting}, {user?.username}
-          </p>
-          <h1>Your collection, your vibe.</h1>
-          {user?.TasteDNA && (
-            <p className="dna-excerpt">
-              "{user.TasteDNA.content.slice(0, 180)}..."
+      {/* ── New Hero ── */}
+      <section className="dash-hero">
+        {/* Left */}
+        <div className="dash-hero-left">
+          <div className="dash-hero-title">
+            <p className="greeting">
+              {greeting}, {user?.username}
             </p>
-          )}
+            <h1>Have you passed the vibe check yet?</h1>
+          </div>
+
+          <div className="dash-hero-body">
+            {/* Avatar */}
+            <div className="dash-avatar-wrap">
+              {user?.avatar ? (
+                <img
+                  src={user.avatar}
+                  alt={user.username}
+                  className="dash-avatar"
+                />
+              ) : (
+                <div className="dash-avatar-placeholder">{initials}</div>
+              )}
+            </div>
+
+            {/* DNA + stats */}
+            <div className="dash-hero-mid">
+              <div className="dash-stats-row">
+                <div className="dash-stat">
+                  <span className="dash-stat-num">{stats.anime}</span>
+                  <span className="dash-stat-label anime-label">Anime</span>
+                </div>
+                <div className="dash-stat">
+                  <span className="dash-stat-num">{stats.manga}</span>
+                  <span className="dash-stat-label manga-label">Manga</span>
+                </div>
+                <div className="dash-stat">
+                  <span className="dash-stat-num">{stats.game}</span>
+                  <span className="dash-stat-label game-label">Game</span>
+                </div>
+                <div className="dash-stat">
+                  <span className="dash-stat-num">{stats.reviews}</span>
+                  <span className="dash-stat-label reviews-label">Reviews</span>
+                </div>
+              </div>
+              {user?.TasteDNA && (
+                <p className="dna-excerpt">"{user.TasteDNA.content}"</p>
+              )}
+            </div>
+          </div>
         </div>
-        <div className="hero-ctas">
-          <Link to="/vibe-check" className="btn-primary">
-            Vibe Check
-          </Link>
-          <Link to="/collections" className="btn-primary">
-            Title match
-          </Link>
+
+        {/* Right — metric cards */}
+        <div className="dash-hero-right">
+          {/* Top Genres */}
+          <div className="dash-metric-card">
+            <h3 className="dash-metric-title">Top Genre Insights</h3>
+            {topGenres.length === 0 ? (
+              <p className="dash-metric-empty">
+                Add titles to see genre insights
+              </p>
+            ) : (
+              topGenres.map((g) => <GenreBar key={g.genre} {...g} />)
+            )}
+          </div>
+
+          {/* Average Ratings */}
+          <div className="dash-metric-card">
+            <h3 className="dash-metric-title">Average Ratings</h3>
+            {avgRatings.overall == null ? (
+              <p className="dash-metric-empty">No ratings yet</p>
+            ) : (
+              <>
+                <RatingBar
+                  label="Overall"
+                  value={avgRatings.overall}
+                  color="#ef4444"
+                />
+                <RatingBar
+                  label="Anime"
+                  value={avgRatings.anime}
+                  color="var(--anime)"
+                />
+                <RatingBar
+                  label="Manga"
+                  value={avgRatings.manga}
+                  color="var(--manga)"
+                />
+                <RatingBar
+                  label="Game"
+                  value={avgRatings.game}
+                  color="var(--game)"
+                />
+              </>
+            )}
+          </div>
         </div>
       </section>
 
-      {/* Stats */}
-      <section className="stats-row">
-        <div className="stat-card">
-          <span className="stat-label anime-label">Anime</span>
-          <span className="stat-num">{stats.anime}</span>
-        </div>
-        <div className="stat-card">
-          <span className="stat-label manga-label">Manga</span>
-          <span className="stat-num">{stats.manga}</span>
-        </div>
-        <div className="stat-card">
-          <span className="stat-label game-label">Game</span>
-          <span className="stat-num">{stats.game}</span>
-        </div>
-      </section>
-
-      {/* Continue */}
+      {/* ── Continue ── */}
       {ongoing.length > 0 && (
         <section className="section">
           <div className="section-header">
@@ -96,7 +227,7 @@ export default function DashboardPage() {
         </section>
       )}
 
-      {/* Discover CTA */}
+      {/* ── Discover CTA ── */}
       <section className="discover-ctas">
         <Link to="/vibe-check" className="cta-card">
           <h3>Vibe Check</h3>
@@ -108,7 +239,7 @@ export default function DashboardPage() {
         </Link>
       </section>
 
-      {/* Recently added */}
+      {/* ── Recently added ── */}
       <section className="section">
         <div className="section-header">
           <h2>Recently added</h2>
@@ -131,8 +262,8 @@ export default function DashboardPage() {
         </div>
       </section>
 
-      {/* Reviews carousel */}
-      <section className="section">
+      {/* ── Recent reviews ── */}
+      <section className="section" style={{ overflow: "visible" }}>
         <h2>Recent reviews</h2>
         <ReviewCarousel reviews={reviews} />
       </section>

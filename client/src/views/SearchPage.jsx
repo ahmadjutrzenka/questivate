@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router";
 import { searchMedia, clearResults } from "../features/search/searchSlice";
 import { addToCollection } from "../features/collection/collectionSlice";
+import { toast } from "react-toastify";
 
 const SEARCH_TYPES = ["all", "anime", "manga", "game", "user"];
 const STATUSES = ["plan", "ongoing", "completed", "dropped"];
@@ -43,10 +44,10 @@ export default function SearchPage() {
       (c) => c.externalId === String(externalId) && c.mediaType === mediaType,
     );
 
-  const handleAddSave = (e) => {
+  const handleAddSave = async (e) => {
     e.preventDefault();
     const fd = new FormData(e.target);
-    dispatch(
+    const ok = await dispatch(
       addToCollection({
         mediaType: addModal.mediaType,
         externalId: String(addModal.externalId),
@@ -59,6 +60,8 @@ export default function SearchPage() {
       }),
     );
     setAddModal(null);
+    if (ok) toast.success(`${addModal.title} added to collection`);
+    else toast.error("Failed to add to collection");
   };
 
   const mediaTypes = ["anime", "manga", "game"];

@@ -144,19 +144,22 @@ class AIController {
         };
       }
 
+      const user = await require("../models").User.findByPk(req.user.id, {
+        attributes: ["username"],
+      });
+      const username = user?.username || "This user";
+
       const collectionText = collections
         .map(
-          (c) => `
-- ${c.title} (${c.mediaType}) | Genres: ${(c.genres || []).join(", ") || "N/A"} | Score: ${c.score || "N/A"} | Status: ${c.status}`,
+          (c) =>
+            `- ${c.title} (${c.mediaType}) | Genres: ${(c.genres || []).join(", ") || "N/A"} | Score: ${c.score || "N/A"} | Status: ${c.status}`,
         )
-        .join("");
+        .join("\n");
 
       const prompt = `You are an expert in media taste analysis.
-
-Based on this user's collection across anime, manga, and games:
-${collectionText}
-
-Write a 2-3 paragraph personal taste profile in English. Be specific, evocative, and personal — like a music journalist describing an artist's sound. Reference actual patterns you see in their collection (genres, themes, tone). Do NOT list the titles directly. Do NOT use bullet points. Write in flowing prose.`;
+      Based on ${username}'s collection across anime, manga, and games: ${collectionText}
+      
+      Write exactly 3 sentences describing ${username}'s taste profile in English. Be specific and evocative — like a music journalist describing an artist's sound. Reference patterns in genres, themes, and tone. Do NOT list titles directly. Do NOT use bullet points. Start with "${username}" as the subject.`;
 
       const text = await generateContent(prompt);
       const content = text.trim();

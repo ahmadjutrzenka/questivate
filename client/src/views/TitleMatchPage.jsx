@@ -7,6 +7,7 @@ import {
   clearSession,
 } from "../features/recommendation/recommendationSlice";
 import { addToCollection } from "../features/collection/collectionSlice";
+import { toast } from "react-toastify";
 
 const STATUSES = ["plan", "ongoing", "completed", "dropped"];
 const MEDIA_TYPES = ["anime", "manga", "game"];
@@ -39,10 +40,10 @@ export default function TitleMatchPage() {
     dispatch(fetchTitleMatch(Number(id), excludeTitles));
   };
 
-  const handleAddSave = (e) => {
+  const handleAddSave = async (e) => {
     e.preventDefault();
     const fd = new FormData(e.target);
-    dispatch(
+    const ok = await dispatch(
       addToCollection({
         mediaType: addModal.mediaType,
         externalId: String(addModal.externalId),
@@ -55,6 +56,8 @@ export default function TitleMatchPage() {
       }),
     );
     setAddModal(null);
+    if (ok) toast.success(`${addModal.title} added to collection`);
+    else toast.error("Failed to add to collection");
   };
 
   const hasResults = MEDIA_TYPES.some((t) => titleResults[t]?.length > 0);

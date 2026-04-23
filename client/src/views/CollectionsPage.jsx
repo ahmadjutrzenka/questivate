@@ -6,6 +6,7 @@ import {
   removeFromCollection,
 } from "../features/collection/collectionSlice";
 import { createReview, updateReview } from "../features/review/reviewSlice";
+import { toast } from "react-toastify";
 import { Link, useSearchParams } from "react-router";
 import MediaCard from "../components/MediaCard";
 
@@ -37,25 +38,28 @@ export default function CollectionsPage() {
       ? items
       : items.filter((c) => c.mediaType === typeFilter);
 
-  const handleRemove = (id) => {
-    if (window.confirm("Remove this title from your collection?")) {
-      dispatch(removeFromCollection(id));
-    }
+  const handleRemove = async (id) => {
+    if (!window.confirm("Remove this title from your collection?")) return;
+    const ok = await dispatch(removeFromCollection(id));
+    if (ok) toast.success("Removed from collection");
+    else toast.error("Failed to remove");
   };
 
-  const handleEditSave = (e) => {
+  const handleEditSave = async (e) => {
     e.preventDefault();
     const fd = new FormData(e.target);
-    dispatch(
+    const ok = await dispatch(
       updateCollection(editModal.id, {
         status: fd.get("status"),
         isFavorite: fd.get("isFavorite") === "on",
       }),
     );
     setEditModal(null);
+    if (ok) toast.success("Collection updated");
+    else toast.error("Failed to update");
   };
 
-  const handleReviewSave = (e) => {
+  const handleReviewSave = async (e) => {
     e.preventDefault();
     const fd = new FormData(e.target);
     const payload = {
@@ -63,12 +67,13 @@ export default function CollectionsPage() {
       rating: fd.get("rating") ? Number(fd.get("rating")) : null,
       content: fd.get("content") || null,
     };
-    if (reviewModal.Review && reviewModal.Review.id) {
-      dispatch(updateReview(reviewModal.Review.id, payload));
-    } else {
-      dispatch(createReview(payload));
-    }
+    const isEdit = !!reviewModal.Review;
+    const ok = isEdit
+      ? await dispatch(updateReview(reviewModal.Review.id, payload))
+      : await dispatch(createReview(payload));
     setReviewModal(null);
+    if (ok) toast.success(isEdit ? "Review updated" : "Review added");
+    else toast.error("Failed to save review");
   };
 
   return (

@@ -62,7 +62,6 @@ function ReviewModal({ review, onClose }) {
       aria-label={`Full review of ${col?.title}`}
     >
       <div className="review-modal">
-        {/* Header: cover + meta */}
         <div className="review-modal-header">
           <Link
             to={`/media/${col.mediaType}/${col.externalId}`}
@@ -87,7 +86,9 @@ function ReviewModal({ review, onClose }) {
               {col.title}
             </Link>
 
-            <span className={`badge badge-${col.mediaType}`}>
+            <span
+              className={`badge badge-${col.mediaType} review-media-type-badge`}
+            >
               {col.mediaType}
             </span>
 
@@ -190,7 +191,7 @@ export default function ReviewCarousel({ reviews = [] }) {
 
                   {/* Badge + rating + edited */}
                   <div className="review-card-rating-row">
-                    <span className={`badge badge-${col.mediaType}`}>
+                    <span className={`badge badge-${col.mediaType} review-media-type-badge`}>
                       {col.mediaType}
                     </span>
                     {review.rating != null && (
@@ -217,7 +218,7 @@ export default function ReviewCarousel({ reviews = [] }) {
                   className="review-card-read-btn"
                   onClick={() => setSelected(review)}
                 >
-                  read full ↗
+                  Read full review ↗
                 </button>
               </div>
             </article>
