@@ -22,8 +22,8 @@ function App() {
         <Route path="/register" element={<RegisterPage />} />
       </Route>
       <Route path="/oauth-callback" element={<OAuthCallback />} />
-      <Route path="/onboarding" element={<OnboardingPage />} />
       <Route element={<MainLayout />}>
+        <Route path="/onboarding" element={<OnboardingPage />} />
         <Route path="/" element={<DashboardPage />} />
         <Route path="/collections" element={<CollectionsPage />} />
         <Route path="/search" element={<SearchPage />} />

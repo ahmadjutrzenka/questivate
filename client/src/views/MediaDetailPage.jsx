@@ -1,8 +1,7 @@
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
-import { useState } from "react";
 import { addToCollection } from "../features/collection/collectionSlice";
 import { BASE_URL } from "../constants/url";
 import { toast } from "react-toastify";

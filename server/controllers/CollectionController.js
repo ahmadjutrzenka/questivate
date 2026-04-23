@@ -134,6 +134,9 @@ class CollectionController {
 
       const collection = await Collection.findByPk(id);
 
+      if (!collection)
+        throw { name: "NotFound", message: "Collection not found" };
+
       await collection.destroy();
       res.status(200).json({ message: `Collection ${id} has been deleted` });
     } catch (error) {

@@ -4,7 +4,6 @@ import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 import { BASE_URL } from "../constants/url";
 import MediaCard from "../components/MediaCard";
-import { generateTasteDNA } from "../features/tasteDna/tasteDnaSlice";
 
 export default function UserProfilePage() {
   const { username } = useParams();

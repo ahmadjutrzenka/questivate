@@ -64,9 +64,7 @@ const getHeaders = () => ({
 export const fetchRecentReviews = () => async (dispatch) => {
   try {
     dispatch(reviewPending());
-    const { data } = await axios.get(`${BASE_URL}/reviews/recent`, {
-      headers: getHeaders(),
-    });
+    const { data } = await axios.get(`${BASE_URL}/reviews/recent`);
     dispatch(fetchReviewsSuccess(data));
   } catch (error) {
     dispatch(
