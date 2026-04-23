@@ -664,18 +664,33 @@ body::after {
   padding: 24px;
 }
 .auth-card {
+  position: relative;
   background: var(--surface-2);
   border: 1px solid var(--border-md);
   border-radius: var(--r-xl);
-  padding: 36px;
+  padding: 44px 36px 36px;
   width: 100%;
   max-width: 420px;
 }
 .auth-title {
-  font-size: 22px;
+  position: absolute;
+  top: -20px;
+  left: 15px;
+  margin: 0;
+  padding: 0 12px;
+  font-size: 30px;
   font-weight: 700;
   color: var(--text);
+  line-height: 1.2;
+}
+.auth-logo-text {
+  font-family: "Broke", "Inter", system-ui, sans-serif;
+  font-size: xx-large;
+  font-weight: 400;
+  color: var(--text);
+  text-align: center;
   margin-bottom: 24px;
+  letter-spacing: 0.5px;
 }
 .auth-error {
   font-size: 13px;
@@ -1172,6 +1187,12 @@ body::after {
 .dna-excerpt::-webkit-scrollbar-thumb {
   background: var(--surface-3);
   border-radius: 4px;
+}
+.dna-excerpt-empty {
+  font-size: 13px;
+  color: var(--text-faint);
+  font-style: italic;
+  max-width: 520px;
 }
 .hero-ctas {
   display: flex;

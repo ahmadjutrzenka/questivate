@@ -23,7 +23,8 @@ export default function RegisterPage() {
   return (
     <div className="auth-page">
       <div className="auth-card">
-        <h1 className="auth-title">Register</h1>
+        <h1 className="auth-title">Register to</h1>
+        <div className="auth-logo-text">Questivate</div>
         <form onSubmit={handleSubmit} className="auth-form">
           <input
             type="text"

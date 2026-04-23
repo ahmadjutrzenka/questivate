@@ -6,7 +6,6 @@ import { fetchRecentReviews } from "../features/review/reviewSlice";
 import MediaCard from "../components/MediaCard";
 import ReviewCarousel from "../components/ReviewCarousel.jsx";
 
-/* ── helpers ─────────────────────────────────────────────── */
 function getTopGenres(items, n = 3) {
   const count = {};
   items.forEach((c) => {
@@ -35,7 +34,6 @@ function getAvgRatings(items) {
   };
 }
 
-/* ── sub-components ──────────────────────────────────────── */
 function GenreBar({ genre, pct }) {
   return (
     <div className="dash-genre-row">
@@ -69,7 +67,6 @@ function RatingBar({ label, value, color }) {
   );
 }
 
-/* ── main page ───────────────────────────────────────────── */
 export default function DashboardPage() {
   const dispatch = useDispatch();
   const { user } = useSelector((s) => s.auth);
@@ -90,7 +87,7 @@ export default function DashboardPage() {
     anime: items.filter((c) => c.mediaType === "anime").length,
     manga: items.filter((c) => c.mediaType === "manga").length,
     game: items.filter((c) => c.mediaType === "game").length,
-    reviews: reviews.length,
+    reviews: items.filter((c) => c.Review != null).length,
   };
 
   const topGenres = getTopGenres(items);
@@ -149,8 +146,12 @@ export default function DashboardPage() {
                   <span className="dash-stat-label reviews-label">Reviews</span>
                 </div>
               </div>
-              {user?.TasteDNA && (
+              {user?.TasteDNA ? (
                 <p className="dna-excerpt">"{user.TasteDNA.content}"</p>
+              ) : (
+                <p className="dna-excerpt-empty">
+                  No Taste DNA yet. You can generate it by editing your profile.
+                </p>
               )}
             </div>
           </div>

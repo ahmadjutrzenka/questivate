@@ -25,7 +25,8 @@ export default function LoginPage() {
   return (
     <div className="auth-page">
       <div className="auth-card">
-        <h1 className="auth-title">Login</h1>
+        <h1 className="auth-title">Login to</h1>
+        <div className="auth-logo-text">Questivate</div>
         <form onSubmit={handleSubmit} className="auth-form">
           <input
             type="email"
