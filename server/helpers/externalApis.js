@@ -20,15 +20,19 @@ async function getIGDBToken() {
 
 async function searchJikanAnime(query) {
   const response = await axios.get("https://api.jikan.moe/v4/anime", {
-    params: { q: query, limit: 8 },
+    params: { q: query, limit: 3 },
   });
   return response.data.data || [];
 }
 
 async function searchJikanManga(query) {
+  console.log(query, "<<<");
+  
   const response = await axios.get("https://api.jikan.moe/v4/manga", {
-    params: { q: query, limit: 8 },
+    params: { q: query, limit: 3 },
   });
+  console.log(response.data.data, "<<<<< INIDATA");
+  
   return response.data.data || [];
 }
 
@@ -36,7 +40,7 @@ async function searchIGDB(query) {
   const token = await getIGDBToken();
   const response = await axios.post(
     "https://api.igdb.com/v4/games",
-    `fields name,cover.url,genres.name,summary,rating,first_release_date; search "${query}"; limit 8;`,
+    `fields name,cover.url,genres.name,summary,rating,first_release_date; search "${query}"; limit 3;`,
     {
       headers: {
         "Client-ID": process.env.IGDB_CLIENT_ID,
