@@ -5,7 +5,11 @@ import {
   updateCollection,
   removeFromCollection,
 } from "../features/collection/collectionSlice";
-import { createReview, updateReview } from "../features/review/reviewSlice";
+import {
+  createReview,
+  updateReview,
+  deleteReview,
+} from "../features/review/reviewSlice";
 import { toast } from "react-toastify";
 import { Link, useSearchParams } from "react-router";
 import MediaCard from "../components/MediaCard";
@@ -74,6 +78,13 @@ export default function CollectionsPage() {
     setReviewModal(null);
     if (ok) toast.success(isEdit ? "Review updated" : "Review added");
     else toast.error("Failed to save review");
+  };
+
+  const handleReviewDelete = async () => {
+    const ok = await dispatch(deleteReview(reviewModal.Review.id));
+    setReviewModal(null);
+    if (ok) toast.success("Review deleted");
+    else toast.error("Failed to delete review");
   };
 
   return (
@@ -226,6 +237,15 @@ export default function CollectionsPage() {
                 />
               </label>
               <div className="modal-actions">
+                {reviewModal.Review && (
+                  <button
+                    type="button"
+                    className="btn btn-danger"
+                    onClick={handleReviewDelete}
+                  >
+                    Delete
+                  </button>
+                )}
                 <button
                   type="button"
                   className="btn btn-ghost"

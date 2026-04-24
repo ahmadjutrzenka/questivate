@@ -3,7 +3,6 @@ import AuthLayout from "./layouts/AuthLayout";
 import MainLayout from "./layouts/MainLayout";
 import LoginPage from "./views/LoginPage";
 import RegisterPage from "./views/RegisterPage";
-import OAuthCallback from "./views/OAuthCallback";
 import DashboardPage from "./views/DashboardPage";
 import CollectionsPage from "./views/CollectionsPage";
 import SearchPage from "./views/SearchPage";
@@ -21,7 +20,6 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
       </Route>
-      <Route path="/oauth-callback" element={<OAuthCallback />} />
       <Route element={<MainLayout />}>
         <Route path="/onboarding" element={<OnboardingPage />} />
         <Route path="/" element={<DashboardPage />} />
