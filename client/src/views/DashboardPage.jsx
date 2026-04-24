@@ -206,6 +206,18 @@ export default function DashboardPage() {
         </div>
       </section>
 
+      {/* ── Discover CTA ── */}
+      <section className="discover-ctas desktop-only">
+        <Link to="/vibe-check" className="cta-card">
+          <h3>Vibe Check</h3>
+          <p>Pick titles, AI finds what to watch, read, or play next.</p>
+        </Link>
+        <Link to="/collections?mode=title-match" className="cta-card">
+          <h3>Title Match</h3>
+          <p>Choose one title, find its counterparts across all three media.</p>
+        </Link>
+      </section>
+
       {/* ── Continue ── */}
       {ongoing.length > 0 && (
         <section className="section">
@@ -229,18 +241,6 @@ export default function DashboardPage() {
           </div>
         </section>
       )}
-
-      {/* ── Discover CTA ── */}
-      <section className="discover-ctas desktop-only">
-        <Link to="/vibe-check" className="cta-card">
-          <h3>Vibe Check</h3>
-          <p>Pick titles, AI finds what to watch, read, or play next.</p>
-        </Link>
-        <Link to="/collections?mode=title-match" className="cta-card">
-          <h3>Title Match</h3>
-          <p>Choose one title, find its counterparts across all three media.</p>
-        </Link>
-      </section>
 
       <div className={`fab-wrapper ${fabOpen ? "active" : ""}`}>
         <div className="fab-items">
