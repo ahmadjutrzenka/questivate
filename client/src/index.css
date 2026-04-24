@@ -2168,10 +2168,30 @@ body::after {
 /* ═══════════════════════════════════════════════════════════
    USER PROFILE PAGE
 ═══════════════════════════════════════════════════════════ */
+.profile-top-row {
+  display: flex;
+  /* justify-content: center; */
+  align-items: center;
+  gap: 80px;
+  flex-wrap: wrap;
+}
+
 .profile-header {
   display: flex;
-  gap: 24px;
-  align-items: flex-start;
+  gap: 28px;
+  align-items: center;
+  flex: 0 1 auto;
+  min-width: 300px;
+}
+.profile-edit-btn {
+  margin-top: 4px;
+  align-self: flex-start;
+}
+.profile-favorites-side {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex-shrink: 0;
 }
 .profile-avatar-wrap {
   flex-shrink: 0;
@@ -2229,12 +2249,12 @@ body::after {
   display: flex;
   flex-direction: column;
   gap: 6px;
-  width: 80px;
+  width: 96px;
   text-decoration: none;
 }
 .favorite-card img {
-  width: 80px;
-  height: 114px;
+  width: 96px;
+  height: 136px;
   border-radius: var(--r-md);
   object-fit: cover;
   border: 1px solid var(--border);
@@ -3418,11 +3438,36 @@ body::after {
   }
 
   /* Profile */
+  .profile-top-row {
+    flex-direction: column;
+    align-items: center;
+    gap: 32px;
+  }
   .profile-header {
     flex-direction: column;
     align-items: center;
     text-align: center;
+    min-width: 0;
   }
+  .profile-stats {
+    justify-content: center;
+  }
+  .profile-bio {
+    max-width: 100%;
+    text-align: center;
+  }
+  .profile-edit-btn {
+    align-self: center;
+  }
+
+  .profile-favorites-side {
+    align-items: center;
+    width: 100%;
+  }
+  .profile-favorites-side .favorites-grid {
+    justify-content: center;
+  }
+
   .profile-stats {
     justify-content: center;
   }

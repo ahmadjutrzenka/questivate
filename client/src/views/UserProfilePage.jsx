@@ -42,78 +42,77 @@ export default function UserProfilePage() {
 
   return (
     <div className="profile-page">
-      {/* Profile header */}
-      <div className="profile-header">
-        <div className="profile-avatar-wrap">
-          {user.avatar ? (
-            <img
-              src={user.avatar}
-              alt={user.username}
-              className="profile-avatar"
-            />
-          ) : (
-            <div className="profile-avatar-placeholder">
-              {user.username[0].toUpperCase()}
+      <div className="profile-top-row">
+        <div className="profile-header">
+          <div className="profile-avatar-wrap">
+            {user.avatar ? (
+              <img
+                src={user.avatar}
+                alt={user.username}
+                className="profile-avatar"
+              />
+            ) : (
+              <div className="profile-avatar-placeholder">
+                {user.username[0].toUpperCase()}
+              </div>
+            )}
+          </div>
+          <div className="profile-info">
+            <h1 className="profile-username">{user.username}</h1>
+            {user.bio && <p className="profile-bio">{user.bio}</p>}
+            <p className="profile-joined">
+              Joined{" "}
+              {new Date(user.joinedSince).toLocaleDateString("en-US", {
+                month: "long",
+                year: "numeric",
+              })}
+            </p>
+            <div className="profile-stats">
+              <span className="profile-stat">
+                <span className="anime-label">{stats.anime}</span> anime
+              </span>
+              <span className="profile-stat">
+                <span className="manga-label">{stats.manga}</span> manga
+              </span>
+              <span className="profile-stat">
+                <span className="game-label">{stats.game}</span> games
+              </span>
             </div>
-          )}
-        </div>
-        <div className="profile-info">
-          <h1 className="profile-username">{user.username}</h1>
-          {user.bio && <p className="profile-bio">{user.bio}</p>}
-          <p className="profile-joined">
-            Joined{" "}
-            {new Date(user.joinedSince).toLocaleDateString("en-US", {
-              month: "long",
-              year: "numeric",
-            })}
-          </p>
-          <div className="profile-stats">
-            <span className="profile-stat">
-              <span className="anime-label">{stats.anime}</span> anime
-            </span>
-            <span className="profile-stat">
-              <span className="manga-label">{stats.manga}</span> manga
-            </span>
-            <span className="profile-stat">
-              <span className="game-label">{stats.game}</span> games
-            </span>
-          </div>
-          {isOwnProfile && (
-            <button
-              className="btn btn-ghost"
-              style={{ marginTop: 4, alignSelf: "flex-start" }}
-              onClick={() => navigate("/profile")}
-            >
-              Edit profile
-            </button>
-          )}
-        </div>
-      </div>
-
-      {/* Favorites */}
-      {favorites.length > 0 && (
-        <section className="profile-section">
-          <h2 className="profile-section-title">★ Favorites</h2>
-          <div className="favorites-grid">
-            {favorites.map((f) => (
-              <Link
-                to={`/media/${f.mediaType}/${f.externalId}`}
-                key={f.id}
-                className="favorite-card"
+            {isOwnProfile && (
+              <button
+                className="btn btn-ghost profile-edit-btn"
+                onClick={() => navigate("/profile")}
               >
-                <img
-                  src={
-                    f.coverUrl ||
-                    `https://placehold.co/80x114/1e1e2a/7c7a8a?text=${f.mediaType}`
-                  }
-                  alt={f.title}
-                />
-                <span className="favorite-title">{f.title}</span>
-              </Link>
-            ))}
+                Edit profile
+              </button>
+            )}
           </div>
-        </section>
-      )}
+        </div>
+
+        {favorites.length > 0 && (
+          <div className="profile-favorites-side">
+            <h2 className="profile-section-title">★ Favorites</h2>
+            <div className="favorites-grid">
+              {favorites.map((f) => (
+                <Link
+                  to={`/media/${f.mediaType}/${f.externalId}`}
+                  key={f.id}
+                  className="favorite-card"
+                >
+                  <img
+                    src={
+                      f.coverUrl ||
+                      `https://placehold.co/80x114/1e1e2a/7c7a8a?text=${f.mediaType}`
+                    }
+                    alt={f.title}
+                  />
+                  <span className="favorite-title">{f.title}</span>
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
 
       {/* Taste DNA */}
       {tasteDNA && (
