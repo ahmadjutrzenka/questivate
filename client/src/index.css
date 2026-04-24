@@ -1294,6 +1294,11 @@ body::after {
   border-left: 2px solid var(--manga);
   padding-left: 14px;
   max-width: 520px;
+  margin-top: 16px;
+  /* display: -webkit-box; */
+  -webkit-line-clamp: 7;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
   overflow-y: auto;
   min-height: 0;
 }
@@ -1309,6 +1314,7 @@ body::after {
   color: var(--text-faint);
   font-style: italic;
   max-width: 520px;
+  margin-top: 16px;
 }
 .hero-ctas {
   display: flex;
