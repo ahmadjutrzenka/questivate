@@ -33,7 +33,7 @@
   /* Backgrounds */
   --bg: #0e0e14;
   --bg-main: #0b1120;
-  --bg-glass: rgba(14, 14, 20, 0.85);
+  --bg-glass: rgba(14, 14, 20, 0.65);
   --bg-glass-heavy: rgba(14, 14, 20, 0.96);
 
   /* Surfaces */
@@ -126,9 +126,11 @@ img {
 /* ═══════════════════════════════════════════════════════════
    BODY & ROOT
 ═══════════════════════════════════════════════════════════ */
-html,
-body {
+html {
   background-color: var(--bg-main);
+}
+
+body {
   position: relative;
   font-family: "Swiss 721";
   overflow-x: clip;
@@ -162,7 +164,6 @@ body::after {
   min-height: 100svh;
   display: flex;
   flex-direction: column;
-
 }
 
 /* ═══════════════════════════════════════════════════════════
@@ -787,7 +788,7 @@ body::after {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--bg-main);
+  background: transparent;
   padding: 24px;
 }
 .auth-card {
