@@ -66,7 +66,7 @@ describe("searchJikanAnime", () => {
     expect(result[0]).toHaveProperty("title", "Death Note");
     expect(axios.get).toHaveBeenCalledWith(
       "https://api.jikan.moe/v4/anime",
-      expect.objectContaining({ params: { q: "death note", limit: 8 } }),
+      expect.objectContaining({ params: { q: "death note", limit: 3 } }),
     );
   });
 
@@ -100,7 +100,7 @@ describe("searchJikanManga", () => {
     expect(result[0]).toHaveProperty("title", "Fullmetal Alchemist");
     expect(axios.get).toHaveBeenCalledWith(
       "https://api.jikan.moe/v4/manga",
-      expect.objectContaining({ params: { q: "fullmetal", limit: 8 } }),
+      expect.objectContaining({ params: { q: "fullmetal", limit: 3 } }),
     );
   });
 
