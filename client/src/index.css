@@ -131,7 +131,7 @@ body {
   background-color: var(--bg-main);
   position: relative;
   font-family: "Swiss 721";
-  overflow-x: hidden;
+  overflow-x: clip;
   width: 100%;
   -webkit-font-smoothing: antialiased;
 }
@@ -162,6 +162,7 @@ body::after {
   min-height: 100svh;
   display: flex;
   flex-direction: column;
+
 }
 
 /* ═══════════════════════════════════════════════════════════
