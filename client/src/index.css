@@ -33,7 +33,7 @@
   /* Backgrounds */
   --bg: #0e0e14;
   --bg-main: #0b1120;
-  --bg-glass: rgba(14, 14, 20, 0.65);
+  --bg-glass: rgba(14, 14, 20, 0.37);
   --bg-glass-heavy: rgba(14, 14, 20, 0.96);
 
   /* Surfaces */
@@ -648,6 +648,19 @@ body::after {
   -webkit-backdrop-filter: blur(var(--blur-lg));
   border: 1px solid var(--border-md);
   border-radius: var(--r-xl);
+  position: relative;
+  z-index: 1;
+}
+.navbar-inner::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: var(--bg-glass);
+  backdrop-filter: blur(var(--blur-lg));
+  -webkit-backdrop-filter: blur(var(--blur-lg));
+  pointer-events: none;
 }
 .navbar-logo {
   font-family: "Broke", "Inter", system-ui, sans-serif;
