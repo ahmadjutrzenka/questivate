@@ -4,6 +4,11 @@
 
 Questivate lets users curate their personal media library across three categories (anime, manga, games), track their progress and ratings, write reviews, and discover new titles through two AI-driven discovery features powered by Google Gemini.
 
+### 🔗 Live Demo
+
+- **App**: https://questiv8.vercel.app
+- **API**: https://questivate-server.vercel.app
+
 ---
 
 ## ✨ Features
